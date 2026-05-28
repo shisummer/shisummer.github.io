@@ -104,7 +104,7 @@ export function ImageSlider() {
       </div>
       
       {/* Caption */}
-      <p className="mt-4 text-sm text-muted-foreground text-center">
+      <p className="mt-4 text-sm text-muted-foreground text-left">
         capturing moments and concepts through a camera lens and a paintbrush.
       </p>
     </div>
