@@ -105,7 +105,7 @@ export function ImageSlider() {
       
       {/* Caption */}
       <p className="mt-4 text-sm text-muted-foreground text-center">
-        originally from the bay area. capturing things through a lens.
+        capturing moments and concepts through a camera lens and a paintbrush.
       </p>
     </div>
   )
