@@ -70,7 +70,7 @@ const upcomingCourses = [
   "ENGN 0510: Electricity and Magnetism",
   "ENGN 1570: Linear Systems Analysis",
   "ENGN 1630: Digital Electronic System Design",
-  "ENGN 0790: Quantum Mechanics",
+  "PHYS 0790: Quantum Mechanics",
 ]
 
 const completedCourses = [
@@ -188,11 +188,6 @@ export default function PortfolioPage() {
               I&apos;m originally from the Bay Area (Dublin, CA) and currently studying at Brown. Outside of class, I&apos;m involved with our Formula SAE team and write for the Arts & Culture section of The Brown Daily Herald. I spent my first two years deep in mechanical design, but realized the most interesting engineering problems happen right where hardware meets electronics. I&apos;m switching to EE this fall so I can actually understand and design the systems that control the mechanics. (Note: I&apos;m open to roles anywhere and don&apos;t require relocation assistance.)
             </p>
             
-            {/* Art & Photography Slider */}
-            <div className="mt-12">
-              <ImageSlider />
-            </div>
-            
             {/* Coursework */}
             <div className="mt-12 glass-heavy rounded-2xl p-6 md:p-8">
               <h3 className="text-xl font-semibold text-foreground mb-6">coursework</h3>
@@ -219,6 +214,16 @@ export default function PortfolioPage() {
                 </div>
               </div>
             </div>
+            
+            {/* Art & Photography paragraph */}
+            <p className="mt-12 text-lg text-muted-foreground leading-relaxed">
+              In my free time, I enjoy taking photos, and capturing the world one drawing/painting at a time.
+            </p>
+            
+            {/* Art & Photography Slider */}
+            <div className="mt-8">
+              <ImageSlider />
+            </div>
           </div>
         </section>
 
@@ -229,7 +234,7 @@ export default function PortfolioPage() {
               contact
             </h2>
             <p className="mt-6 text-muted-foreground text-center">
-              feel free to reach out for anything—whether it&apos;s about a project, a potential role, or just grabbing a matcha to talk design and hardware.
+              feel free to reach out for anything—whether it&apos;s about a project, a potential role, or just grabbing a matcha to talk design and hardware. :)
             </p>
             <div className="mt-10">
               <ContactForm />
