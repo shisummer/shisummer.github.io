@@ -66,11 +66,23 @@ const categories = [
   { id: "robotics", label: "robotics." },
 ]
 
-const coursework = [
-  "ENGN 0040: Dynamics and Vibrations",
+const upcomingCourses = [
   "ENGN 0510: Electricity and Magnetism",
-  "ENGN 0030: Intro to Engineering",
-  "APMA 0330: Methods of Applied Math",
+  "ENGN 1570: Linear Systems Analysis",
+  "ENGN 1630: Digital Electronic System Design",
+  "PHYS 0790: Quantum Mechanics",
+]
+
+const completedCourses = [
+  "ENGN 0310: Mechanics of Solids and Structures",
+  "ENGN 0720: Thermodynamics",
+  "ENGN 1370: Advanced Engineering Dynamics",
+  "ENGN 0410: Materials Science",
+  "ENGN 0520: Electrical Circuits & Signals",
+  "APMA 0360: Applied PDES",
+  "APMA 0350: Applied ODES",
+  "ENGN 0040: Dynamics and Vibrations",
+  "CSCI 0111: Computing Foundations: Data",
 ]
 
 export default function PortfolioPage() {
@@ -88,13 +100,13 @@ export default function PortfolioPage() {
 
       <main className="relative z-10">
         {/* HERO SECTION */}
-        <section id="home" className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-24 pb-12">
-          <div className="max-w-6xl mx-auto w-full">
+        <section id="home" className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-32 pb-12">
+          <div className="max-w-6xl mx-auto w-full mt-16">
             <div className="max-w-3xl">
-              <p className="text-sm text-muted-foreground tracking-wide mb-2">
+              <p className="text-lg md:text-xl text-muted-foreground tracking-wide mb-2">
                 hi! i&apos;m
               </p>
-              <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-foreground tracking-tight">
+              <h1 className="text-6xl md:text-7xl lg:text-8xl font-semibold text-foreground tracking-tight">
                 Summer Shi
               </h1>
               <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
@@ -128,9 +140,6 @@ export default function PortfolioPage() {
                 </a>
               </div>
             </div>
-            
-            {/* Art & Photography Slider */}
-            <ImageSlider />
           </div>
         </section>
 
@@ -138,7 +147,7 @@ export default function PortfolioPage() {
         <section id="projects" className="px-6 md:px-12 lg:px-24 py-24">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
-              Selected Work
+              projects
             </h2>
             
             <div className="flex flex-wrap items-center gap-3 mt-8">
@@ -173,22 +182,47 @@ export default function PortfolioPage() {
         <section id="about" className="px-6 md:px-12 lg:px-24 py-24">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
-              About
+              about
             </h2>
             <p className="mt-8 text-lg text-muted-foreground leading-relaxed">
-              Originally from the Bay Area, I&apos;m fascinated by systems where precision and reliability are pushed to the absolute limit. My interest in mechanical design is heavily inspired by F1—where every millimeter and millisecond counts. This fall, I&apos;m moving into Electrical Engineering to explore how the electronics inside these systems work. I believe the most interesting problems exist at the intersection of disciplines.
+              I&apos;m originally from the Bay Area (Dublin, CA) and currently studying at Brown. Outside of class, I&apos;m involved with our Formula SAE team and write for the Arts & Culture section of The Brown Daily Herald. I spent my first two years deep in mechanical design, but realized the most interesting engineering problems happen right where hardware meets electronics. I&apos;m switching to EE this fall so I can actually understand and design the systems that control the mechanics. (Note: I&apos;m open to roles anywhere and don&apos;t require relocation assistance.)
             </p>
             
             {/* Coursework */}
             <div className="mt-12 glass-heavy rounded-2xl p-6 md:p-8">
               <h3 className="text-xl font-semibold text-foreground mb-6">coursework</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {coursework.map((course) => (
-                  <p key={course} className="text-muted-foreground text-sm">
-                    {course}
-                  </p>
-                ))}
+              
+              <div className="mb-6">
+                <h4 className="text-sm font-medium text-foreground/80 mb-3">upcoming (fall)</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {upcomingCourses.map((course) => (
+                    <p key={course} className="text-muted-foreground text-sm">
+                      {course}
+                    </p>
+                  ))}
+                </div>
               </div>
+              
+              <div>
+                <h4 className="text-sm font-medium text-foreground/80 mb-3">completed</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {completedCourses.map((course) => (
+                    <p key={course} className="text-muted-foreground text-sm">
+                      {course}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
+            
+            {/* Art & Photography paragraph */}
+            <p className="mt-12 text-lg text-muted-foreground leading-relaxed">
+              In my free time, I enjoy taking photos, and capturing the world one drawing/painting at a time.
+            </p>
+            
+            {/* Art & Photography Slider */}
+            <div className="mt-8">
+              <ImageSlider />
             </div>
           </div>
         </section>
@@ -197,10 +231,10 @@ export default function PortfolioPage() {
         <section id="contact" className="px-6 md:px-12 lg:px-24 py-24 pb-32">
           <div className="max-w-xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight text-center">
-              Contact
+              contact
             </h2>
             <p className="mt-6 text-muted-foreground text-center">
-              have a question or want to work together?
+              feel free to reach out for anything—whether it&apos;s about a project, a potential role, or just grabbing a matcha to talk design and hardware. :)
             </p>
             <div className="mt-10">
               <ContactForm />
