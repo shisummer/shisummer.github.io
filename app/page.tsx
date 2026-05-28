@@ -100,8 +100,8 @@ export default function PortfolioPage() {
 
       <main className="relative z-10">
         {/* HERO SECTION */}
-        <section id="home" className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-24 pb-12">
-          <div className="max-w-6xl mx-auto w-full">
+        <section id="home" className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-32 pb-12">
+          <div className="max-w-6xl mx-auto w-full mt-16">
             <div className="max-w-3xl">
               <p className="text-lg md:text-xl text-muted-foreground tracking-wide mb-2">
                 hi! i&apos;m
@@ -140,9 +140,6 @@ export default function PortfolioPage() {
                 </a>
               </div>
             </div>
-            
-            {/* Art & Photography Slider */}
-            <ImageSlider />
           </div>
         </section>
 
@@ -190,6 +187,11 @@ export default function PortfolioPage() {
             <p className="mt-8 text-lg text-muted-foreground leading-relaxed">
               I&apos;m originally from the Bay Area (Dublin, CA) and currently studying at Brown. Outside of class, I&apos;m involved with our Formula SAE team and write for the Arts & Culture section of The Brown Daily Herald. I spent my first two years deep in mechanical design, but realized the most interesting engineering problems happen right where hardware meets electronics. I&apos;m switching to EE this fall so I can actually understand and design the systems that control the mechanics. (Note: I&apos;m open to roles anywhere and don&apos;t require relocation assistance.)
             </p>
+            
+            {/* Art & Photography Slider */}
+            <div className="mt-12">
+              <ImageSlider />
+            </div>
             
             {/* Coursework */}
             <div className="mt-12 glass-heavy rounded-2xl p-6 md:p-8">
