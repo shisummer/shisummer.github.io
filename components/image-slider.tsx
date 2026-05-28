@@ -34,7 +34,7 @@ export function ImageSlider() {
   }
 
   return (
-    <div className="mt-12 w-full">
+    <div className="w-full">
       <div className="glass-heavy rounded-2xl p-4 md:p-6">
         {/* Slider container */}
         <div className="relative">
