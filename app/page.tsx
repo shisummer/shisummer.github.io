@@ -5,6 +5,8 @@ import { Linkedin, Github, Mail } from "lucide-react"
 import { Navbar } from "@/components/navbar"
 import { AmbientBackground } from "@/components/ambient-background"
 import { ProjectCard } from "@/components/project-card"
+import { ImageSlider } from "@/components/image-slider"
+import { ContactForm } from "@/components/contact-form"
 
 const projects = [
   {
@@ -64,8 +66,14 @@ const categories = [
   { id: "robotics", label: "robotics." },
 ]
 
+const coursework = [
+  "ENGN 0040: Dynamics and Vibrations",
+  "ENGN 0510: Electricity and Magnetism",
+  "ENGN 0030: Intro to Engineering",
+  "APMA 0330: Methods of Applied Math",
+]
+
 export default function PortfolioPage() {
-  const [activeTab, setActiveTab] = useState<"home" | "projects" | "about" | "contact">("home")
   const [activeCategory, setActiveCategory] = useState("all")
 
   const filteredProjects = activeCategory === "all" 
@@ -73,52 +81,62 @@ export default function PortfolioPage() {
     : projects.filter(p => p.category === activeCategory)
 
   return (
-    <div className="relative min-h-screen overflow-hidden">
+    <div className="relative min-h-screen overflow-x-hidden">
       <AmbientBackground />
       
-      <Navbar activeTab={activeTab} setActiveTab={setActiveTab} />
+      <Navbar />
 
-      <main className="relative z-10 pt-24">
-        {activeTab === "home" && (
-          <section className="min-h-[calc(100vh-6rem)] flex flex-col justify-center px-6 md:px-12 lg:px-24 max-w-6xl mx-auto">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-foreground tracking-tight text-balance">
-              Hi, I&apos;m Summer Shi.
-            </h1>
-            <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
-              An Electrical Engineering student at Brown University, building at the intersection of physical mechanics and advanced electronics.
-            </p>
-            <div className="flex items-center gap-6 mt-10">
-              <a 
-                href="https://linkedin.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors duration-300"
-                aria-label="LinkedIn"
-              >
-                <Linkedin className="w-6 h-6" strokeWidth={1.5} />
-              </a>
-              <a 
-                href="https://github.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="text-muted-foreground hover:text-foreground transition-colors duration-300"
-                aria-label="GitHub"
-              >
-                <Github className="w-6 h-6" strokeWidth={1.5} />
-              </a>
-              <a 
-                href="mailto:summer@brown.edu"
-                className="text-muted-foreground hover:text-foreground transition-colors duration-300"
-                aria-label="Email"
-              >
-                <Mail className="w-6 h-6" strokeWidth={1.5} />
-              </a>
+      <main className="relative z-10">
+        {/* HERO SECTION */}
+        <section id="home" className="min-h-screen flex flex-col justify-center px-6 md:px-12 lg:px-24 pt-24 pb-12">
+          <div className="max-w-6xl mx-auto w-full">
+            <div className="max-w-3xl">
+              <p className="text-sm text-muted-foreground tracking-wide mb-2">
+                hi! i&apos;m
+              </p>
+              <h1 className="text-6xl md:text-7xl lg:text-8xl font-bold text-foreground tracking-tight">
+                Summer Shi
+              </h1>
+              <p className="mt-6 text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed">
+                a rising junior at Brown University studying electrical engineering. switching from meche to ee this fall to build hardware at the intersection of both.
+              </p>
+              <div className="flex items-center gap-6 mt-8">
+                <a 
+                  href="https://linkedin.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-300"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="w-6 h-6" strokeWidth={1.5} />
+                </a>
+                <a 
+                  href="https://github.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-300"
+                  aria-label="GitHub"
+                >
+                  <Github className="w-6 h-6" strokeWidth={1.5} />
+                </a>
+                <a 
+                  href="mailto:summer@brown.edu"
+                  className="text-muted-foreground hover:text-foreground transition-colors duration-300"
+                  aria-label="Email"
+                >
+                  <Mail className="w-6 h-6" strokeWidth={1.5} />
+                </a>
+              </div>
             </div>
-          </section>
-        )}
+            
+            {/* Art & Photography Slider */}
+            <ImageSlider />
+          </div>
+        </section>
 
-        {activeTab === "projects" && (
-          <section className="px-6 md:px-12 lg:px-24 max-w-7xl mx-auto pb-24">
+        {/* SELECTED WORK SECTION */}
+        <section id="projects" className="px-6 md:px-12 lg:px-24 py-24">
+          <div className="max-w-7xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
               Selected Work
             </h2>
@@ -128,10 +146,10 @@ export default function PortfolioPage() {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
-                  className={`px-4 py-2 text-sm font-medium rounded-full border transition-all duration-300 ${
+                  className={`px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300 ${
                     activeCategory === cat.id
-                      ? "border-foreground/50 bg-foreground/10 text-foreground"
-                      : "border-border text-muted-foreground hover:border-foreground/30 hover:text-foreground/80"
+                      ? "glass-heavy border-white/20 text-foreground"
+                      : "glass border-white/5 text-muted-foreground hover:border-white/15 hover:text-foreground"
                   }`}
                 >
                   {cat.label}
@@ -148,79 +166,47 @@ export default function PortfolioPage() {
                 />
               ))}
             </div>
-          </section>
-        )}
+          </div>
+        </section>
 
-        {activeTab === "about" && (
-          <section className="px-6 md:px-12 lg:px-24 max-w-4xl mx-auto pb-24">
+        {/* ABOUT SECTION */}
+        <section id="about" className="px-6 md:px-12 lg:px-24 py-24">
+          <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
               About
             </h2>
-            <div className="mt-8 space-y-6 text-muted-foreground leading-relaxed">
-              <p>
-                I&apos;m currently pursuing a degree in Electrical Engineering at Brown University, 
-                where I focus on the convergence of embedded systems, power electronics, and mechanical design.
-              </p>
-              <p>
-                My work spans from designing custom PCBs for robotics applications to developing 
-                mechanical systems that push the boundaries of precision and reliability. I believe 
-                the most interesting problems exist at the intersection of disciplines.
-              </p>
-              <p>
-                When I&apos;m not in the lab, you can find me tinkering with vintage electronics, 
-                contributing to open-source hardware projects, or exploring the Providence maker scene.
-              </p>
-            </div>
-            <div className="mt-12 grid grid-cols-2 md:grid-cols-4 gap-4">
-              {["SolidWorks", "Altium Designer", "Python", "MATLAB", "KiCad", "C/C++", "ROS", "Fusion 360"].map((skill) => (
-                <div 
-                  key={skill}
-                  className="glass px-4 py-3 rounded-lg text-sm text-muted-foreground text-center"
-                >
-                  {skill}
-                </div>
-              ))}
-            </div>
-          </section>
-        )}
-
-        {activeTab === "contact" && (
-          <section className="px-6 md:px-12 lg:px-24 max-w-4xl mx-auto pb-24 min-h-[calc(100vh-6rem)] flex flex-col justify-center">
-            <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">
-              Get in Touch
-            </h2>
-            <p className="mt-6 text-lg text-muted-foreground max-w-xl leading-relaxed">
-              I&apos;m always open to discussing new projects, creative ideas, or opportunities to be part of something amazing.
+            <p className="mt-8 text-lg text-muted-foreground leading-relaxed">
+              Originally from the Bay Area, I&apos;m fascinated by systems where precision and reliability are pushed to the absolute limit. My interest in mechanical design is heavily inspired by F1—where every millimeter and millisecond counts. This fall, I&apos;m moving into Electrical Engineering to explore how the electronics inside these systems work. I believe the most interesting problems exist at the intersection of disciplines.
             </p>
-            <div className="mt-10 space-y-4">
-              <a 
-                href="mailto:summer@brown.edu"
-                className="flex items-center gap-4 text-foreground hover:text-foreground/80 transition-colors group"
-              >
-                <Mail className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-                <span className="text-lg">summer@brown.edu</span>
-              </a>
-              <a 
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-4 text-foreground hover:text-foreground/80 transition-colors group"
-              >
-                <Linkedin className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-                <span className="text-lg">LinkedIn</span>
-              </a>
-              <a 
-                href="https://github.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-4 text-foreground hover:text-foreground/80 transition-colors group"
-              >
-                <Github className="w-5 h-5 text-muted-foreground group-hover:text-foreground transition-colors" />
-                <span className="text-lg">GitHub</span>
-              </a>
+            
+            {/* Coursework */}
+            <div className="mt-12 glass-heavy rounded-2xl p-6 md:p-8">
+              <h3 className="text-xl font-semibold text-foreground mb-6">coursework</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {coursework.map((course) => (
+                  <p key={course} className="text-muted-foreground text-sm">
+                    {course}
+                  </p>
+                ))}
+              </div>
             </div>
-          </section>
-        )}
+          </div>
+        </section>
+
+        {/* CONTACT SECTION */}
+        <section id="contact" className="px-6 md:px-12 lg:px-24 py-24 pb-32">
+          <div className="max-w-xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight text-center">
+              Contact
+            </h2>
+            <p className="mt-6 text-muted-foreground text-center">
+              have a question or want to work together?
+            </p>
+            <div className="mt-10">
+              <ContactForm />
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   )
