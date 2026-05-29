@@ -61,6 +61,43 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
         {/* Body */}
         <div className="px-6 py-6 md:px-8 md:py-8">
+          {detail?.layout === "text" && (
+            <div className="space-y-8">
+              {detail.institution && (
+                <p className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+                  {detail.institution}
+                </p>
+              )}
+              <div>
+                <h3 className="mb-3 text-lg md:text-xl font-semibold text-foreground tracking-tight">
+                  The Problem
+                </h3>
+                <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
+                  {detail.problem}
+                </p>
+              </div>
+              <div>
+                <h3 className="mb-3 text-lg md:text-xl font-semibold text-foreground tracking-tight">
+                  Goal &amp; Approach
+                </h3>
+                <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
+                  {detail.goal}
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2 pt-2">
+                {project.tags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="text-xs font-normal bg-secondary/50 text-muted-foreground border-none"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
           {detail?.layout === "stacked" && (
             <div className="space-y-6">
               <img
