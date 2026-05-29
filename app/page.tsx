@@ -35,7 +35,11 @@ export default function PortfolioPage() {
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
   const filteredProjects =
-    activeCategory === "all" ? projects : projects.filter((p) => p.category === activeCategory)
+    activeCategory === "all"
+      ? projects
+      : projects.filter((p) =>
+          p.categories ? p.categories.includes(activeCategory) : p.category === activeCategory,
+        )
 
   return (
     <div className="relative min-h-screen overflow-x-hidden">

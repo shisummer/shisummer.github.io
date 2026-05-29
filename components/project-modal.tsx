@@ -94,6 +94,14 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               {/* Left: text + report link */}
               <div className="flex flex-col">
+                {detail.sectionTitle && (
+                  <h3 className="mb-4 text-lg md:text-xl font-semibold text-foreground tracking-tight">
+                    {detail.sectionTitle}
+                  </h3>
+                )}
+                {detail.context && (
+                  <p className="mb-4 text-sm leading-relaxed text-muted-foreground">{detail.context}</p>
+                )}
                 <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
                   {detail.fullDescription}
                 </p>
@@ -103,7 +111,7 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   rel="noopener noreferrer"
                   className="mt-8 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-white/5"
                 >
-                  View Full Report
+                  {detail.reportLabel ?? "View Full Report"}
                   <ExternalLink className="h-4 w-4" strokeWidth={1.5} />
                 </a>
               </div>
