@@ -1,5 +1,11 @@
 export type ProjectDetail =
   | {
+      layout: "text"
+      problem: string
+      goal: string
+      institution?: string
+    }
+  | {
       layout: "stacked"
       fullDescription: string
       topImage: { src: string; alt: string }
@@ -138,4 +144,47 @@ export const categories = [
   { id: "electrical", label: "Electrical" },
   { id: "mechanical", label: "Mechanical" },
   { id: "robotics", label: "Robotics" },
+]
+
+export const research: Project[] = [
+  {
+    id: 101,
+    title: "G-Force Trainer: Passive Gyroscopic Resistance System for Astronaut Fine Motor Conditioning",
+    description:
+      "A compact (<0.1 kg) passive gyroscopic device for localized wrist and forearm conditioning in microgravity, doubling as a force-feedback controller for simulation software.",
+    image: "/research/gforce-cover.png",
+    category: "engineering",
+    tags: ["Aerospace", "Gyroscopic Mechanics", "Human Factors", "Hardware"],
+    detail: {
+      layout: "text",
+      institution: "Engineering Research",
+      problem:
+        "Current long-duration space missions rely on bulky, high-power exercise systems designed almost exclusively for large muscle groups (legs, core, back). However, there is a critical gap in mission-readiness tools: astronauts lack compact, low-overhead systems for fine-motor and forearm conditioning. Without targeted training, the muscle groups required for precise tool handling, EVA (spacewalk) operations, and emergency equipment manipulation degrade. Furthermore, traditional motorized solutions add unacceptable mass, power drain, and mechanical failure risks to a spacecraft's strict payload budget.",
+      goal:
+        "The goal of this project is to design and prototype a compact, lightweight (<0.1 kg), passive gyroscopic resistance device that provides localized wrist and forearm conditioning for astronauts, minimizing musculoskeletal degradation during long-duration spaceflight. The system bridges the gap between physical health and digital training by doubling as a high-fidelity, force-feedback controller for microgravity simulation software.",
+    },
+  },
+  {
+    id: 102,
+    title: "Epidemiological Data Analysis & Public Health Interface: Systemic HIV Trends in Incarcerated Populations",
+    description:
+      "Aggregated and analyzed epidemiological data on HIV in correctional facilities, deploying a secure web platform to visualize findings for public health researchers.",
+    image: "/research/hiv-research-cover.png",
+    category: "non-engineering",
+    tags: ["Public Health", "Epidemiology", "Data Analysis", "Web Platform"],
+    detail: {
+      layout: "text",
+      institution: "Warren Alpert Medical School of Brown University",
+      problem:
+        "Incarcerated populations experience disproportionately higher rates of chronic infectious diseases like HIV, yet systemic data tracking within correctional facilities is fractured, qualitative, and difficult for public health officials to access. Researchers lack unified, secure digital frameworks to screen medical literature, synthesize inmate qualitative narratives, and visualize socioeconomic and systemic health barriers.",
+      goal:
+        "The main goal of this project was to aggregate, screen, and analyze epidemiological data regarding HIV prevalence, transmission vectors, and healthcare access constraints within correctional facilities. The ultimate objective was to synthesize qualitative public health data into actionable insights and deploy a custom, secure web platform to visualize findings for public health researchers.",
+    },
+  },
+]
+
+export const researchCategories = [
+  { id: "all", label: "All" },
+  { id: "engineering", label: "Engineering" },
+  { id: "non-engineering", label: "Non-Engineering" },
 ]

@@ -9,7 +9,7 @@ import { ProjectCard } from "@/components/project-card"
 import { ProjectModal } from "@/components/project-modal"
 import { ImageSlider } from "@/components/image-slider"
 import { ContactForm } from "@/components/contact-form"
-import { projects, categories, type Project } from "@/lib/projects"
+import { projects, categories, research, researchCategories, type Project } from "@/lib/projects"
 
 const upcomingCourses = [
   "ENGN 0510: Electricity and Magnetism",
@@ -32,6 +32,7 @@ const completedCourses = [
 
 export default function PortfolioPage() {
   const [activeCategory, setActiveCategory] = useState("all")
+  const [activeResearchCategory, setActiveResearchCategory] = useState("all")
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
 
   const filteredProjects =
@@ -39,6 +40,13 @@ export default function PortfolioPage() {
       ? projects
       : projects.filter((p) =>
           p.categories ? p.categories.includes(activeCategory) : p.category === activeCategory,
+        )
+
+  const filteredResearch =
+    activeResearchCategory === "all"
+      ? research
+      : research.filter((p) =>
+          p.categories ? p.categories.includes(activeResearchCategory) : p.category === activeResearchCategory,
         )
 
   return (
@@ -115,6 +123,35 @@ export default function PortfolioPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
               {filteredProjects.map((project, index) => (
                 <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* RESEARCH SECTION */}
+        <section id="research" className="px-6 md:px-12 lg:px-24 py-24">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">Research</h2>
+
+            <div className="flex flex-wrap items-center gap-3 mt-8">
+              {researchCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveResearchCategory(cat.id)}
+                  className={`px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300 ${
+                    activeResearchCategory === cat.id
+                      ? "glass-heavy border-white/20 text-foreground"
+                      : "glass border-white/5 text-muted-foreground hover:border-white/15 hover:text-foreground"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
+              {filteredResearch.map((item, index) => (
+                <ProjectCard key={item.id} project={item} index={index} onOpen={setSelectedProject} />
               ))}
             </div>
           </div>
