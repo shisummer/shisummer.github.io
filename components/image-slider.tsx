@@ -4,11 +4,61 @@ import { useState, useRef } from "react"
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 const images = [
-  { id: 1, alt: "Photography 1" },
-  { id: 2, alt: "Photography 2" },
-  { id: 3, alt: "Photography 3" },
-  { id: 4, alt: "Photography 4" },
-  { id: 5, alt: "Photography 5" },
+  {
+    id: 1,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/4ede0b52-ed82-4320-ba84-9b947dd6d194.1280x1280%20copy-jHpLYqLteDuQwLej302Ol9Jc8htv6p.jpg",
+    alt: "Watercolor painting of a horse and carriage on a city street",
+  },
+  {
+    id: 2,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/15acd82b-43aa-47bd-ad1c-28fdf25d4ef9.1280x1280-JicUiSElZxq6vQmVlADq7l7Ae27EL9.jpg",
+    alt: "Oil painting of two Tibetan monks in conversation",
+  },
+  {
+    id: 3,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/f025c965-be3e-4a1b-8238-a33da9e7beb1.1280x1280-mGVC3QI6rCiOR9hZPy5tSLO8dotzpl.jpg",
+    alt: "Painting of an elderly Tibetan woman with the Potala Palace behind her",
+  },
+  {
+    id: 4,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-05-29%20at%2012.42.46%E2%80%AFPM-2BIIoXKTwSGdD3YdFhAbeRi0G5nkUD.png",
+    alt: "Green-toned stylized digital artwork of two figures in motion",
+  },
+  {
+    id: 5,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Screenshot%202026-05-29%20at%2012.42.53%E2%80%AFPM-19XYnV2y9efhfLgEDVRsVnkwD3i2Wq.png",
+    alt: "Warm-toned stylized digital artwork of two figures resting",
+  },
+  {
+    id: 6,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/100_0059.JPG-nkU1HOl3Fosnm2SevHIp3GQfgwBL3H.jpeg",
+    alt: "Mount Fuji with a red pagoda overlooking a town",
+  },
+  {
+    id: 7,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/100_0069.JPG-9QMtdUq8f81NkAtrrQqGkB4GLpb33d.jpeg",
+    alt: "Deer being hand-fed in Nara Park",
+  },
+  {
+    id: 8,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/100_0022.JPG-x0I8llFKhg9xEUXvTxri4SdFhXxY3b.jpeg",
+    alt: "Red tram passing a railway crossing in Japan",
+  },
+  {
+    id: 9,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/100_0045.JPG-HcGm3bmnmAongXzuFSBfWjRbU9ZhWJ.jpeg",
+    alt: "Chefs preparing sashimi at a Japanese fish market stall",
+  },
+  {
+    id: 10,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/100_0046.JPG-6U5K23SjynB8gF9XlW6O3fSLZi4p3F.jpeg",
+    alt: "Fresh seafood market display with handwritten price tags",
+  },
+  {
+    id: 11,
+    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/100_0028.JPG-ZLqm0SFzzDFwIEfZ1NL4oUX6sKM9dC.jpeg",
+    alt: "Collection of white maneki-neko lucky cat figurines",
+  },
 ]
 
 export function ImageSlider() {
@@ -48,21 +98,12 @@ export function ImageSlider() {
                 key={image.id}
                 className="flex-shrink-0 w-[80%] md:w-[60%] aspect-[16/10] rounded-xl overflow-hidden snap-center"
               >
-                <div className="w-full h-full bg-gradient-to-br from-secondary to-muted flex items-center justify-center">
-                  <svg 
-                    className="w-16 h-16 text-muted-foreground/30" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    viewBox="0 0 24 24"
-                  >
-                    <path 
-                      strokeLinecap="round" 
-                      strokeLinejoin="round" 
-                      strokeWidth={1} 
-                      d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" 
-                    />
-                  </svg>
-                </div>
+                <img
+                  src={image.src || "/placeholder.svg"}
+                  alt={image.alt}
+                  className="w-full h-full object-cover"
+                  crossOrigin="anonymous"
+                />
               </div>
             ))}
           </div>
