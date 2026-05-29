@@ -1,10 +1,10 @@
 "use client"
 
 const navItems = [
-  { id: "home", label: "home" },
-  { id: "projects", label: "projects" },
-  { id: "about", label: "about" },
-  { id: "contact", label: "contact" },
+  { id: "home", label: "Home" },
+  { id: "projects", label: "Projects" },
+  { id: "about", label: "About" },
+  { id: "contact", label: "Contact" },
 ] as const
 
 export function Navbar() {
