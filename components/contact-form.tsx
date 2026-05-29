@@ -19,7 +19,7 @@ export function ContactForm() {
     <form onSubmit={handleSubmit} className="glass-heavy rounded-2xl p-6 md:p-8 space-y-6">
       <div>
         <label htmlFor="name" className="block text-sm text-muted-foreground mb-2">
-          name
+          Name
         </label>
         <input
           type="text"
@@ -34,7 +34,7 @@ export function ContactForm() {
       
       <div>
         <label htmlFor="email" className="block text-sm text-muted-foreground mb-2">
-          email
+          Email
         </label>
         <input
           type="email"
@@ -49,7 +49,7 @@ export function ContactForm() {
       
       <div>
         <label htmlFor="message" className="block text-sm text-muted-foreground mb-2">
-          message
+          Message
         </label>
         <textarea
           id="message"
