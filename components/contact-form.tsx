@@ -11,8 +11,9 @@ export function ContactForm() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    // Handle form submission
-    console.log("Form submitted:", formData)
+    const subject = encodeURIComponent(`Portfolio contact from ${formData.name}`)
+    const body = encodeURIComponent(`Name: ${formData.name}\nEmail: ${formData.email}\n\n${formData.message}`)
+    window.location.href = `mailto:summer_shi@brown.edu?subject=${subject}&body=${body}`
   }
 
   return (
