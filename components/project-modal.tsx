@@ -127,6 +127,43 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
           )}
 
+          {detail?.layout === "report" && (
+            <div className="space-y-6">
+              <div className="overflow-hidden rounded-xl border border-white/10 bg-black">
+                <img
+                  src={detail.image.src || "/placeholder.svg"}
+                  alt={detail.image.alt}
+                  className="mx-auto w-full object-contain"
+                />
+              </div>
+              <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
+                {detail.fullDescription}
+              </p>
+              <div className="flex flex-wrap items-center gap-4 pt-2">
+                <a
+                  href={detail.reportUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex w-fit items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-white/5"
+                >
+                  {detail.reportLabel ?? "View Full Report"}
+                  <ExternalLink className="h-4 w-4" strokeWidth={1.5} />
+                </a>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {project.tags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="text-xs font-normal bg-secondary/50 text-muted-foreground border-none"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
           {detail?.layout === "split" && (
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               {/* Left: text + report link */}

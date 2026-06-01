@@ -20,6 +20,13 @@ export type ProjectDetail =
       reportLabel?: string
       videos: { src: string; title: string }[]
     }
+  | {
+      layout: "report"
+      fullDescription: string
+      image: { src: string; alt: string }
+      reportUrl: string
+      reportLabel?: string
+    }
 
 export interface Project {
   id: number
@@ -57,26 +64,6 @@ export const projects: Project[] = [
     },
   },
   {
-    id: 2,
-    title: "Rigid-body Rotation (RBR) Dynamics Simulations",
-    description:
-      "Simulated torque-free wobbling (the Dzhanibekov effect) and gyroscopic precession in MATLAB, validating returning boomerang flight.",
-    image: "/projects/rbr-cover.png",
-    category: "mechanical",
-    tags: ["MATLAB", "Rigid-body Dynamics", "FoilSim"],
-    detail: {
-      layout: "split",
-      fullDescription:
-        "This project explored the principles of rigid-body rotation dynamics through the computational simulation of two complex physical phenomena using MATLAB: torque-free wobbling (the Dzhanibekov effect) and torque-induced gyroscopic precession (boomerang flight). Part A focused on modeling an asymmetrical, solid aluminum T-shaped nut to study the intermediate axis theorem. By calculating the center of mass and principal moments of inertia, the intermediate principal axis was identified, and a numerical simulation successfully animated the inherent instability that causes the nut to periodically flip 180 degrees. Part B transitioned to a real-world design application by engineering a functional four-blade balsa wood boomerang. Using NASA's FoilSim software and iterative MATLAB simulations, mass properties, aerodynamic lift/drag profiles, and gyroscopic precession rates were optimized. The simulation successfully proved that tuning the boomerang to an overall mass of 0.095 kg enables a stable, returning flight path that travels around an 18-foot distant pole and returns safely to the point of release.",
-      reportUrl:
-        "https://docs.google.com/document/d/1HnSCn6Fav-ADY4mq9061fsi8nQaIf10f2FX-7zK6Yyg/export?format=pdf",
-      videos: [
-        { src: "https://streamable.com/e/mi88b2?loop=1", title: "Boomerang Flight Simulation" },
-        { src: "https://streamable.com/e/6abygu?loop=1", title: "T-Nut Intermediate Axis Flip Simulation" },
-      ],
-    },
-  },
-  {
     id: 7,
     title: "Retrodog: Assistive Bio-Inspired Companion Robot",
     description:
@@ -102,13 +89,45 @@ export const projects: Project[] = [
     },
   },
   {
-    id: 3,
-    title: "Autonomous Line-Following Robot",
+    id: 2,
+    title: "Rigid-body Rotation (RBR) Dynamics Simulations",
     description:
-      "Designed and built a robot with a custom PCB for sensor integration and motor control using PID algorithms.",
-    image: "/placeholder-robot.jpg",
-    category: "robotics",
-    tags: ["Altium", "C++", "SolidWorks"],
+      "Simulated torque-free wobbling (the Dzhanibekov effect) and gyroscopic precession in MATLAB, validating returning boomerang flight.",
+    image: "/projects/rbr-cover.png",
+    category: "mechanical",
+    tags: ["MATLAB", "Rigid-body Dynamics", "FoilSim"],
+    detail: {
+      layout: "split",
+      fullDescription:
+        "This project explored the principles of rigid-body rotation dynamics through the computational simulation of two complex physical phenomena using MATLAB: torque-free wobbling (the Dzhanibekov effect) and torque-induced gyroscopic precession (boomerang flight). Part A focused on modeling an asymmetrical, solid aluminum T-shaped nut to study the intermediate axis theorem. By calculating the center of mass and principal moments of inertia, the intermediate principal axis was identified, and a numerical simulation successfully animated the inherent instability that causes the nut to periodically flip 180 degrees. Part B transitioned to a real-world design application by engineering a functional four-blade balsa wood boomerang. Using NASA's FoilSim software and iterative MATLAB simulations, mass properties, aerodynamic lift/drag profiles, and gyroscopic precession rates were optimized. The simulation successfully proved that tuning the boomerang to an overall mass of 0.095 kg enables a stable, returning flight path that travels around an 18-foot distant pole and returns safely to the point of release.",
+      reportUrl:
+        "https://docs.google.com/document/d/1HnSCn6Fav-ADY4mq9061fsi8nQaIf10f2FX-7zK6Yyg/export?format=pdf",
+      videos: [
+        { src: "https://streamable.com/e/mi88b2?loop=1", title: "Boomerang Flight Simulation" },
+        { src: "https://streamable.com/e/6abygu?loop=1", title: "T-Nut Intermediate Axis Flip Simulation" },
+      ],
+    },
+  },
+  {
+    id: 3,
+    title: "FEM Troubleshooting and Error Analysis",
+    description:
+      "Investigated vibrational modes of Chladni plates, diagnosing FEM failures in ABAQUS and validating thin-plate theory with MATLAB numerical models.",
+    image: "/projects/fem-original.png",
+    category: "mechanical",
+    tags: ["ABAQUS", "FEM", "FEA", "MATLAB"],
+    detail: {
+      layout: "report",
+      fullDescription:
+        "In this project, we investigated the vibrational modes and normal mode wave patterns of square and circular Chladni plates. The project involved extracting experimental vibrational figures and comparing them against computational finite element method (FEM) simulations and numerical models. To model the frequency spectra computationally, steady-state dynamics simulations were initially conducted using ABAQUS. However, the initial simulations failed to produce contour plots that visually matched the physical sand patterns. Through root-cause analysis, I determined that the input plate thickness (10 centimeters) violated the assumptions of thin-shell plate theory, causing the software to treat the geometry as a highly rigid block rather than a flexible plate. To overcome the FEM limitations, we developed a numerical simulation in MATLAB to solve for the theoretical natural frequencies based on idealized thin-plate vibration equations. While comparing the MATLAB predictions to the physical experiments yielded significant percent errors (ranging from -70.46% to 120.73%), I successfully conducted an error analysis to explain the discrepancies. I identified that unmodeled physical realities—such as aerodynamic damping, slight asymmetries in the physical leveling apparatus, and the actual compliance of the central mounting constraint compared to idealized boundary conditions—skewed the experimental frequencies away from theoretical targets. Despite the numerical offsets, the experimental results successfully validated the core physical principles of plate vibration. We proved that the relative progression of excitation frequencies behaved exactly as predicted: higher-order geometries with a greater density of nodal lines inherently require higher energy inputs (frequencies) to actuate.",
+      image: {
+        src: "/projects/fem-original.png",
+        alt: "ABAQUS finite element simulation showing the displacement magnitude contour of a vibrating Chladni plate's normal mode.",
+      },
+      reportUrl:
+        "https://docs.google.com/document/d/1NckNd1RHoFG3YBA9mXNsiiOYjA3E__PXpNALDeLNJ-Y/export?format=pdf",
+      reportLabel: "View Full Report",
+    },
   },
   {
     id: 4,
@@ -127,15 +146,6 @@ export const projects: Project[] = [
     image: "/placeholder-sensor.jpg",
     category: "electrical",
     tags: ["Altium", "nRF24L01", "Python"],
-  },
-  {
-    id: 6,
-    title: "Hexapod Walking Platform",
-    description:
-      "Built a six-legged walking robot with inverse kinematics and terrain adaptation capabilities.",
-    image: "/placeholder-hexapod.jpg",
-    category: "robotics",
-    tags: ["MATLAB", "Dynamixel", "ROS"],
   },
 ]
 
