@@ -22,7 +22,7 @@ const industryHighlights = [
   "Engineered a high-fidelity, 1:96 scale digital twin of the Columbia-class submarine using PTC Creo, executing complex geometric modeling to support design verification and spatial analysis.",
   "Leaned into additive manufacturing (3D printing) technologies to rapidly prototype the CAD model, validating physical tolerances, structural integrity, and assembly alignment.",
   "Conducted multi-disciplinary impact reviews of proposed modifications, evaluating both electrical configurations and mechanical interfaces to identify potential failure points and prevent unintended cascading risks across sub-systems.",
-  "Evaluated and processed Proposed Change Notices (PCNs), gaining hands-on experience in configuration management, change control boards, and lifecycle engineering workflows.",
+  "Evaluated and processed Proposed Notice of Change (PNOCs) and technical documentation from prime contractors, including Lockheed Martin Space and General Dynamics Mission Systems, ensuring cross-enterprise compliance with configuration management workflows.",
   "Collaborated within a cross-functional defense engineering team, actively participating in technical reviews and integrating daily into the systems engineering V-model framework.",
 ]
 
