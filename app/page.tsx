@@ -18,6 +18,14 @@ const upcomingCourses = [
   "PHYS 0790: Quantum Mechanics",
 ]
 
+const industryHighlights = [
+  "Engineered a high-fidelity, 1:96 scale digital twin of the Columbia-class submarine using PTC Creo, executing complex geometric modeling to support design verification and spatial analysis.",
+  "Leaned into additive manufacturing (3D printing) technologies to rapidly prototype the CAD model, validating physical tolerances, structural integrity, and assembly alignment.",
+  "Conducted multi-disciplinary impact reviews of proposed modifications, evaluating both electrical configurations and mechanical interfaces to identify potential failure points and prevent unintended cascading risks across sub-systems.",
+  "Evaluated and processed Proposed Change Notices (PCNs), gaining hands-on experience in configuration management, change control boards, and lifecycle engineering workflows.",
+  "Collaborated within a cross-functional defense engineering team, actively participating in technical reviews and integrating daily into the systems engineering V-model framework.",
+]
+
 const completedCourses = [
   "ENGN 0310: Mechanics of Solids and Structures",
   "ENGN 0720: Thermodynamics",
@@ -153,6 +161,55 @@ export default function PortfolioPage() {
               {filteredResearch.map((item, index) => (
                 <ProjectCard key={item.id} project={item} index={index} onOpen={setSelectedProject} />
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* INDUSTRY SECTION */}
+        <section id="industry" className="px-6 md:px-12 lg:px-24 py-24">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">Industry Experience</h2>
+
+            <div className="relative mt-12 overflow-hidden rounded-3xl border border-white/15 bg-white/[0.04] p-8 md:p-12 shadow-2xl backdrop-blur-2xl">
+              {/* liquid glass highlights */}
+              <div
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/40 to-transparent"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -top-24 -left-16 h-64 w-64 rounded-full bg-white/10 blur-3xl"
+              />
+              <div
+                aria-hidden
+                className="pointer-events-none absolute -bottom-24 -right-10 h-72 w-72 rounded-full bg-white/[0.06] blur-3xl"
+              />
+
+              <div className="relative flex flex-col gap-8">
+                <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight">BAE Systems</h3>
+                    <p className="mt-1 text-lg text-muted-foreground">Systems Engineering Intern</p>
+                  </div>
+                  <div className="flex flex-col gap-4 md:items-end">
+                    <img
+                      src="/industry/bae-systems-logo.png"
+                      alt="BAE Systems logo"
+                      className="h-9 w-auto object-contain"
+                    />
+                    <p className="text-sm font-medium text-muted-foreground">05/15/2026 &ndash; 08/15/2026</p>
+                  </div>
+                </div>
+
+                <ul className="flex flex-col gap-4">
+                  {industryHighlights.map((point) => (
+                    <li key={point} className="flex gap-3 text-muted-foreground leading-relaxed">
+                      <span aria-hidden className="mt-2 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-foreground/50" />
+                      <span className="text-pretty">{point}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
           </div>
         </section>
