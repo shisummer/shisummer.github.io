@@ -143,11 +143,6 @@ export function ImageSlider() {
           ))}
         </div>
       </div>
-      
-      {/* Caption */}
-      <p className="mt-4 text-sm text-muted-foreground text-left">
-        capturing moments and concepts through a camera lens and a paintbrush.
-      </p>
     </div>
   )
 }
