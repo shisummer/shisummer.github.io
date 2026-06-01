@@ -188,17 +188,14 @@ export default function PortfolioPage() {
               <div className="relative flex flex-col gap-8">
                 <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
                   <div>
-                    <h3 className="text-2xl md:text-3xl font-semibold text-foreground tracking-tight">BAE Systems</h3>
-                    <p className="mt-1 text-lg text-muted-foreground">Systems Engineering Intern</p>
-                  </div>
-                  <div className="flex flex-col gap-4 md:items-end">
                     <img
                       src="/industry/bae-systems-logo.png"
-                      alt="BAE Systems logo"
+                      alt="BAE Systems"
                       className="h-9 w-auto object-contain"
                     />
-                    <p className="text-sm font-medium text-muted-foreground">05/15/2026 &ndash; 08/15/2026</p>
+                    <p className="mt-3 text-lg text-muted-foreground">Systems Engineering Intern</p>
                   </div>
+                  <p className="text-sm font-medium text-muted-foreground">05/15/2026 &ndash; 08/15/2026</p>
                 </div>
 
                 <ul className="flex flex-col gap-4">
