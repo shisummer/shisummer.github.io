@@ -27,6 +27,14 @@ export type ProjectDetail =
       reportUrl: string
       reportLabel?: string
     }
+  | {
+      layout: "code"
+      fullDescription: string
+      code: string
+      codeLanguage: string
+      codeTitle?: string
+      videos: { src: string; title: string }[]
+    }
 
 export interface Project {
   id: number
@@ -131,12 +139,55 @@ export const projects: Project[] = [
   },
   {
     id: 4,
-    title: "Smart Power Distribution Unit",
+    title: "Motion-Activated Alarm",
     description:
-      "Engineered a modular PDU with real-time monitoring and overcurrent protection for laboratory applications.",
-    image: "/placeholder-pdu.jpg",
+      "An Arduino-based automated greeter that uses a PIR sensor to detect motion and play a cheerful ascending melody on a passive buzzer.",
+    image: "/projects/motion-alarm-cover.png",
     category: "electrical",
-    tags: ["KiCad", "Python", "STM32"],
+    categories: ["electrical", "robotics"],
+    tags: ["Arduino", "C++", "PIR Sensor", "Embedded Systems"],
+    detail: {
+      layout: "code",
+      fullDescription:
+        "This Arduino project is a clever, interactive device that acts as an automated greeter. Using a Passive Infrared (PIR) sensor, the system actively monitors its surroundings for movement. When a person walks into the sensor's field of view, the Arduino immediately detects the change in infrared energy and triggers a response.\n\nOnce motion is detected, the system sends a notification to the Serial Monitor and activates a passive buzzer to play a cheerful, three-note ascending melody. The project includes a necessary 30-second warm-up phase on startup to allow the PIR sensor to calibrate to the room's ambient infrared levels, ensuring accurate detection. After the greeting plays, the system briefly pauses for three seconds to prevent continuous, overlapping alarms before resetting to detect the next passerby.",
+      codeLanguage: "cpp",
+      codeTitle: "motion_greeter.ino",
+      code: `// Motion-activated greeter
+// PIR OUT -> pin 2, passive buzzer -> pin 8
+
+const int pirPin = 2;      // PIR sensor's OUT pin
+const int buzzerPin = 8;   // passive buzzer
+
+void setup() {
+  pinMode(pirPin, INPUT);
+  Serial.begin(9600);
+  Serial.println("PIR warming up, hold still...");
+  delay(30000);            // sensor needs ~30s to settle
+  Serial.println("Ready! Walk in front of it.");
+}
+
+void loop() {
+  if (digitalRead(pirPin) == HIGH) {   // motion detected
+    Serial.println("Motion detected!");
+    playGreeting();
+    delay(3000);                       // pause before re-triggering
+  }
+}
+
+void playGreeting() {
+  tone(buzzerPin, 523, 200);   // first note
+  delay(250);
+  tone(buzzerPin, 659, 200);   // second note (higher)
+  delay(250);
+  tone(buzzerPin, 784, 400);   // third note (higher still)
+  delay(450);
+  noTone(buzzerPin);           // silence
+}`,
+      videos: [
+        { src: "https://streamable.com/e/ml5ujl?loop=1", title: "Motion Detection Trigger" },
+        { src: "https://streamable.com/e/hfv7lh?loop=1", title: "Ascending Greeting Melody" },
+      ],
+    },
   },
   {
     id: 5,
