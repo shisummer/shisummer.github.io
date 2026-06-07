@@ -2,6 +2,8 @@
 
 import { useEffect } from "react"
 import { X, ExternalLink } from "lucide-react"
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"
+import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"
 import { Badge } from "@/components/ui/badge"
 import type { Project } from "@/lib/projects"
 
@@ -159,6 +161,73 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   >
                     {tag}
                   </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {detail?.layout === "code" && (
+            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+              {/* Left: description + code block */}
+              <div className="flex flex-col gap-6">
+                <p className="text-sm md:text-base leading-relaxed whitespace-pre-line" style={{ color: "#e5e7eb" }}>
+                  {detail.fullDescription}
+                </p>
+
+                <div className="overflow-hidden rounded-xl border border-white/10 bg-[#282c34]">
+                  {detail.codeTitle && (
+                    <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
+                      <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
+                      <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
+                      <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
+                      <span className="ml-2 font-mono text-xs text-muted-foreground">{detail.codeTitle}</span>
+                    </div>
+                  )}
+                  <div className="max-h-[420px] overflow-y-auto">
+                    <SyntaxHighlighter
+                      language={detail.codeLanguage}
+                      style={oneDark}
+                      customStyle={{
+                        margin: 0,
+                        background: "transparent",
+                        fontSize: "0.8rem",
+                        padding: "1rem",
+                      }}
+                      codeTagProps={{ style: { fontFamily: "var(--font-mono, monospace)" } }}
+                    >
+                      {detail.code}
+                    </SyntaxHighlighter>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="text-xs font-normal bg-secondary/50 text-muted-foreground border-none"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right: video embeds */}
+              <div className="flex flex-col gap-5">
+                {detail.videos.map((video) => (
+                  <div
+                    key={video.src}
+                    className="aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black"
+                  >
+                    <iframe
+                      src={video.src}
+                      title={video.title}
+                      className="h-full w-full"
+                      allow="autoplay; fullscreen"
+                      allowFullScreen
+                    />
+                  </div>
                 ))}
               </div>
             </div>
