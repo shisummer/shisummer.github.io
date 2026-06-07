@@ -144,7 +144,6 @@ export const projects: Project[] = [
       "An Arduino-based automated greeter that uses a PIR sensor to detect motion and play a cheerful ascending melody on a passive buzzer.",
     image: "/projects/motion-alarm-cover.jpg",
     category: "electrical",
-    categories: ["electrical", "robotics"],
     tags: ["Arduino", "C++", "PIR Sensor", "Embedded Systems"],
     detail: {
       layout: "code",
