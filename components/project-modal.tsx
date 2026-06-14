@@ -168,11 +168,41 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
           {detail?.layout === "code" && (
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-              {/* Left: description + code block */}
+              {/* Left: description + tags */}
               <div className="flex flex-col gap-6">
                 <p className="text-sm md:text-base leading-relaxed whitespace-pre-line" style={{ color: "#e5e7eb" }}>
                   {detail.fullDescription}
                 </p>
+
+                <div className="flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <Badge
+                      key={tag}
+                      variant="secondary"
+                      className="text-xs font-normal bg-secondary/50 text-muted-foreground border-none"
+                    >
+                      {tag}
+                    </Badge>
+                  ))}
+                </div>
+              </div>
+
+              {/* Right: video embeds + code block */}
+              <div className="flex flex-col gap-5">
+                {detail.videos.map((video) => (
+                  <div
+                    key={video.src}
+                    className="aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black"
+                  >
+                    <iframe
+                      src={video.src}
+                      title={video.title}
+                      className="h-full w-full"
+                      allow="autoplay; fullscreen"
+                      allowFullScreen
+                    />
+                  </div>
+                ))}
 
                 <div className="overflow-hidden rounded-xl border border-white/10 bg-[#282c34]">
                   {detail.codeTitle && (
@@ -199,36 +229,6 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     </SyntaxHighlighter>
                   </div>
                 </div>
-
-                <div className="flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <Badge
-                      key={tag}
-                      variant="secondary"
-                      className="text-xs font-normal bg-secondary/50 text-muted-foreground border-none"
-                    >
-                      {tag}
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-
-              {/* Right: video embeds */}
-              <div className="flex flex-col gap-5">
-                {detail.videos.map((video) => (
-                  <div
-                    key={video.src}
-                    className="aspect-video w-full overflow-hidden rounded-xl border border-white/10 bg-black"
-                  >
-                    <iframe
-                      src={video.src}
-                      title={video.title}
-                      className="h-full w-full"
-                      allow="autoplay; fullscreen"
-                      allowFullScreen
-                    />
-                  </div>
-                ))}
               </div>
             </div>
           )}
