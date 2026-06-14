@@ -48,7 +48,7 @@ export interface Project {
   detail?: ProjectDetail
 }
 
-export const projects: Project[] = [
+const projectsList: Project[] = [
   {
     id: 1,
     title: "Formula SAE Drivetrain Design",
@@ -543,6 +543,12 @@ void playNagBuzz(unsigned long weaknessSeconds) {
     },
   },
 ]
+
+// Display order: Formula SAE, Retrodog, Timed Phone Jail, RBR, FEM, Motion-Activated Alarm (PIR)
+const projectDisplayOrder = [1, 7, 5, 2, 3, 4]
+export const projects: Project[] = projectDisplayOrder
+  .map((id) => projectsList.find((p) => p.id === id))
+  .filter((p): p is Project => Boolean(p))
 
 export const categories = [
   { id: "all", label: "All" },
