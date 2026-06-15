@@ -25,6 +25,6 @@ jobs:
       - run: ls -la
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./.next
+          path: ./out
       - uses: actions/deploy-pages@v4
         id: deployment
