@@ -248,15 +248,17 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
                   {detail.fullDescription}
                 </p>
-                <a
-                  href={detail.reportUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-8 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-white/5"
-                >
-                  {detail.reportLabel ?? "View Full Report"}
-                  <ExternalLink className="h-4 w-4" strokeWidth={1.5} />
-                </a>
+                {detail.reportUrl && (
+                  <a
+                    href={detail.reportUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-8 inline-flex w-fit items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-white/5"
+                  >
+                    {detail.reportLabel ?? "View Full Report"}
+                    <ExternalLink className="h-4 w-4" strokeWidth={1.5} />
+                  </a>
+                )}
               </div>
 
               {/* Right: video embeds */}

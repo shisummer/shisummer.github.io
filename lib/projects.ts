@@ -16,7 +16,7 @@ export type ProjectDetail =
       sectionTitle?: string
       context?: string
       fullDescription: string
-      reportUrl: string
+      reportUrl?: string
       reportLabel?: string
       videos: { src: string; title: string }[]
     }
@@ -87,9 +87,6 @@ const projectsList: Project[] = [
         "Developed for an Engineering Design course to address systemic care gaps in assisted-living facilities. The system is engineered around a human-centric user persona: a 78-year-old resident with Parkinson's disease fighting to retain her personal independence.",
       fullDescription:
         "Retrodog is an affordable, multi-disciplinary quadruped assistant engineered to restore independence and prevent fall risks for elderly residents with severe mobility and vision limitations. Built on top of a programmable bionic quadruped base and controlled via an Arduino microcontroller, the system eliminates complex user interfaces by utilizing a Python-driven Speech Recognition pipeline. Users can control the robot intuitively via voice commands to execute physical tasks. The custom hardware stack consists of two major engineered attachments: a mechanical precision companion claw driven by an MG90s servo for object retrieval, and a snap-on LED light-guiding apparatus. The LED system features a specialized 90-degree structural mount that utilizes ceilings as reflective surfaces to bounce soft, diffused ambient lighting throughout dark rooms. By blending embedded software pipelines, soft-robotics mechanics, and analog circuit routing, the system successfully alleviates daily physical strains for high-risk residents while stabilizing facility care workflows.",
-      reportUrl:
-        "https://docs.google.com/document/d/1u5AHneGzlKvVSPnWUBpis1CNheoVZTam_Um3YRzVWU8/export?format=pdf",
-      reportLabel: "View Full Engineering Report",
       videos: [
         { src: "https://streamable.com/e/k8g50g?loop=1", title: "Diffused Light Guidance Feature" },
         { src: "https://streamable.com/e/dhfeji?loop=1", title: "Voice-Controlled Object Retrieval & Articulation" },
