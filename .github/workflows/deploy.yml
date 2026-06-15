@@ -22,8 +22,9 @@ jobs:
           node-version: 20
       - run: npm install
       - run: npm run build
+      - run: ls -la
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./out
+          path: ./.next
       - uses: actions/deploy-pages@v4
         id: deployment
