@@ -48,7 +48,7 @@ export interface Project {
   detail?: ProjectDetail
 }
 
-export const projects: Project[] = [
+const projectsList: Project[] = [
   {
     id: 1,
     title: "Formula SAE Drivetrain Design",
@@ -190,14 +190,365 @@ void playGreeting() {
   },
   {
     id: 5,
-    title: "Wireless Sensor Network",
+    title: "Timed Phone Jail: RFID-Enforced Focus Station",
     description:
-      "Created a mesh network of environmental sensors with custom RF modules for campus-wide deployment.",
-    image: "/placeholder-sensor.jpg",
+      "An Arduino R4 focus station that uses RFID presence-detection to physically enforce 25-minute Pomodoro sessions, with a multi-screen state machine and daily focus statistics.",
+    image: "/projects/phone-jail-cover.png",
     category: "electrical",
-    tags: ["Altium", "nRF24L01", "Python"],
+    tags: ["Arduino R4", "C++", "MFRC522 RFID", "I2C LCD", "Embedded Systems", "State Machine"],
+    detail: {
+      layout: "code",
+      fullDescription:
+        "Timed Phone Jail is a self-accountability focus station that physically holds the user to their study commitments. Built on an Arduino R4, the system centers on an MFRC522 RFID reader: the user adheres an RFID card to the back of their phone and places it face-down on the reader pad to enroll in a 25-minute Pomodoro session. During the session, a 16x2 I2C LCD displays a live countdown while the R4's built-in LED matrix renders a shrinking progress bar.\n\nThe core engineering challenge is continuous presence detection. The MFRC522 is not designed for sustained polling, so the firmware re-initializes the reader each cycle and implements custom re-detection and debounce logic to reliably distinguish a genuine phone removal from transient false negatives. If the phone is lifted mid-session, a buzzer immediately begins an escalating nag pattern, the LED matrix flashes, the session is flagged as \"broken,\" and the display accumulates the seconds of lapsed focus.\n\nCompleting a full 25 minutes rewards the user with a pleasant ascending chime and a 5-minute break timer. The system maintains running statistics—sessions completed, sessions broken, and total focus minutes—surfaced through a multi-screen \"report card\" state machine (IDLE, FOCUSING, BROKEN, BREAK_TIME, STATS) that the user can cycle through with a debounced push button while idle.",
+      codeLanguage: "cpp",
+      codeTitle: "timed_phone_jail.ino",
+      code: `#include <SPI.h>
+#include <MFRC522.h>
+#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include "Arduino_LED_Matrix.h"
+
+#define SS_PIN 10
+#define RST_PIN 9
+#define BUZZER_PIN 8
+#define BUTTON_PIN 2
+
+#define FOCUS_DURATION 1500000UL
+#define BREAK_DURATION 300000UL
+#define REMOVAL_DEBOUNCE 1500UL
+#define DEBOUNCE_MS 200
+
+MFRC522 rfid(SS_PIN, RST_PIN);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+ArduinoLEDMatrix matrix;
+
+enum State { IDLE, FOCUSING, BROKEN, BREAK_TIME, STATS };
+State currentState = IDLE;
+
+bool phonePresent = false;
+unsigned long lastSeenMs = 0;
+unsigned long sessionStartMs = 0;
+unsigned long brokenStartMs = 0;
+unsigned long weaknessMs = 0;
+
+int sessionsCompleted = 0;
+int sessionsBroken = 0;
+int totalFocusMinutes = 0;
+
+bool lastButtonState = HIGH;
+unsigned long lastButtonPress = 0;
+int statsScreen = 0;
+unsigned long lastStatsSwitch = 0;
+
+void setup() {
+  Serial.begin(9600);
+  delay(3000);
+
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+  pinMode(BUZZER_PIN, OUTPUT);
+
+  SPI.begin();
+  rfid.PCD_Init();
+  delay(50);
+  rfid.PCD_SetAntennaGain(rfid.RxGain_max);
+
+  Wire.begin();
+  lcd.init();
+  lcd.backlight();
+  matrix.begin();
+
+  showIdleScreen();
+  Serial.println("Pomodoro enforcer ready.");
+}
+
+void loop() {
+  checkRFID();
+  checkButton();
+
+  switch (currentState) {
+    case IDLE: break;
+    case FOCUSING: runFocusing(); break;
+    case BROKEN: runBroken(); break;
+    case BREAK_TIME: runBreak(); break;
+    case STATS: runStats(); break;
+  }
+}
+
+void checkRFID() {
+  rfid.PCD_Init();
+  delay(5);
+
+  byte bufferATQA[2];
+  byte bufferSize = sizeof(bufferATQA);
+  MFRC522::StatusCode result = rfid.PICC_RequestA(bufferATQA, &bufferSize);
+
+  if (result == MFRC522::STATUS_OK || result == MFRC522::STATUS_COLLISION) {
+    lastSeenMs = millis();
+    if (!phonePresent) {
+      phonePresent = true;
+      Serial.println("Phone placed");
+      onPhonePlaced();
+    }
+    rfid.PICC_HaltA();
+  } else {
+    if (phonePresent && (millis() - lastSeenMs > REMOVAL_DEBOUNCE)) {
+      phonePresent = false;
+      Serial.println("Phone removed");
+      onPhoneRemoved();
+    }
+  }
+}
+
+void onPhonePlaced() {
+  if (currentState == IDLE) {
+    currentState = FOCUSING;
+    sessionStartMs = millis();
+    weaknessMs = 0;
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Focus! Put down");
+    lcd.setCursor(0, 1);
+    lcd.print("the phone!");
+    delay(1500);
+  } else if (currentState == BROKEN) {
+    currentState = FOCUSING;
+    lcd.clear();
+  }
+}
+
+void onPhoneRemoved() {
+  if (currentState == FOCUSING) {
+    currentState = BROKEN;
+    brokenStartMs = millis();
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("PUT IT DOWN!!!");
+  }
+}
+
+void checkButton() {
+  bool buttonState = digitalRead(BUTTON_PIN);
+  if (buttonState == LOW && lastButtonState == HIGH &&
+      (millis() - lastButtonPress > DEBOUNCE_MS)) {
+    lastButtonPress = millis();
+    onButtonPress();
+  }
+  lastButtonState = buttonState;
+}
+
+void onButtonPress() {
+  if (currentState == BROKEN) {
+    sessionsBroken++;
+    currentState = IDLE;
+    phonePresent = false;
+    showIdleScreen();
+    clearMatrix();
+  } else if (currentState == IDLE) {
+    currentState = STATS;
+    statsScreen = 0;
+    showStatsScreen();
+  } else if (currentState == STATS) {
+    statsScreen++;
+    if (statsScreen > 2) {
+      currentState = IDLE;
+      showIdleScreen();
+    } else {
+      showStatsScreen();
+    }
+  } else if (currentState == BREAK_TIME) {
+    currentState = IDLE;
+    showIdleScreen();
+    clearMatrix();
+  }
+}
+
+void runFocusing() {
+  unsigned long now = millis();
+  unsigned long elapsed = now - sessionStartMs - weaknessMs;
+
+  if (elapsed >= FOCUS_DURATION) {
+    sessionsCompleted++;
+    totalFocusMinutes += 25;
+    playCompletionChime();
+    currentState = BREAK_TIME;
+    sessionStartMs = now;
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Great work! :)");
+    lcd.setCursor(0, 1);
+    lcd.print("Break time!");
+    clearMatrix();
+    return;
+  }
+
+  unsigned long remaining = FOCUS_DURATION - elapsed;
+  int mins = remaining / 60000;
+  int secs = (remaining % 60000) / 1000;
+
+  lcd.setCursor(0, 0);
+  lcd.print("Focus: ");
+  if (mins < 10) lcd.print("0");
+  lcd.print(mins);
+  lcd.print(":");
+  if (secs < 10) lcd.print("0");
+  lcd.print(secs);
+  lcd.print("   ");
+
+  lcd.setCursor(0, 1);
+  lcd.print("Session #");
+  lcd.print(sessionsCompleted + 1);
+  lcd.print("        ");
+
+  updateProgressBar(elapsed, FOCUS_DURATION);
+}
+
+void runBroken() {
+  unsigned long weaknessNow = (millis() - brokenStartMs) / 1000;
+
+  lcd.setCursor(0, 0);
+  lcd.print("PUT IT DOWN!!!");
+  lcd.setCursor(0, 1);
+  lcd.print("Weak: ");
+  lcd.print(weaknessNow);
+  lcd.print("s        ");
+
+  playNagBuzz(weaknessNow);
+  flashMatrix();
+}
+
+void runBreak() {
+  unsigned long elapsed = millis() - sessionStartMs;
+
+  if (elapsed >= BREAK_DURATION) {
+    currentState = IDLE;
+    showIdleScreen();
+    clearMatrix();
+    return;
+  }
+
+  unsigned long remaining = BREAK_DURATION - elapsed;
+  int mins = remaining / 60000;
+  int secs = (remaining % 60000) / 1000;
+
+  lcd.setCursor(0, 0);
+  lcd.print("Break time!     ");
+  lcd.setCursor(0, 1);
+  lcd.print("Back in: ");
+  if (mins < 10) lcd.print("0");
+  lcd.print(mins);
+  lcd.print(":");
+  if (secs < 10) lcd.print("0");
+  lcd.print(secs);
+  lcd.print(" ");
+}
+
+void runStats() {
+  if (millis() - lastStatsSwitch > 3000) {
+    lastStatsSwitch = millis();
+    statsScreen++;
+    if (statsScreen > 2) {
+      currentState = IDLE;
+      showIdleScreen();
+      return;
+    }
+    showStatsScreen();
+  }
+}
+
+void showStatsScreen() {
+  lastStatsSwitch = millis();
+  lcd.clear();
+  if (statsScreen == 0) {
+    lcd.setCursor(0, 0);
+    lcd.print("Sessions done:");
+    lcd.setCursor(0, 1);
+    lcd.print(sessionsCompleted);
+  } else if (statsScreen == 1) {
+    lcd.setCursor(0, 0);
+    lcd.print("Sessions broken:");
+    lcd.setCursor(0, 1);
+    lcd.print(sessionsBroken);
+  } else if (statsScreen == 2) {
+    lcd.setCursor(0, 0);
+    lcd.print("Focus minutes:");
+    lcd.setCursor(0, 1);
+    lcd.print(totalFocusMinutes);
+  }
+}
+
+void showIdleScreen() {
+  lcd.clear();
+  lcd.setCursor(0, 0);
+  lcd.print("Place phone to");
+  lcd.setCursor(0, 1);
+  lcd.print("start focus :)");
+}
+
+void updateProgressBar(unsigned long elapsed, unsigned long total) {
+  byte frame[8][12] = {};
+  int ledsToLight = 96 - (int)map(elapsed, 0, total, 0, 96);
+  ledsToLight = constrain(ledsToLight, 0, 96);
+  int count = 0;
+  for (int row = 0; row < 8 && count < ledsToLight; row++) {
+    for (int col = 0; col < 12 && count < ledsToLight; col++) {
+      frame[row][col] = 1;
+      count++;
+    }
+  }
+  matrix.renderBitmap(frame, 8, 12);
+}
+
+void clearMatrix() {
+  byte frame[8][12] = {};
+  matrix.renderBitmap(frame, 8, 12);
+}
+
+void flashMatrix() {
+  static bool flashState = false;
+  static unsigned long lastFlash = 0;
+  if (millis() - lastFlash > 300) {
+    flashState = !flashState;
+    lastFlash = millis();
+    byte frame[8][12] = {};
+    if (flashState) {
+      for (int r = 0; r < 8; r++)
+        for (int c = 0; c < 12; c++)
+          frame[r][c] = 1;
+    }
+    matrix.renderBitmap(frame, 8, 12);
+  }
+}
+
+void playCompletionChime() {
+  tone(BUZZER_PIN, 523, 200); delay(220);
+  tone(BUZZER_PIN, 659, 200); delay(220);
+  tone(BUZZER_PIN, 784, 200); delay(220);
+  tone(BUZZER_PIN, 1047, 400); delay(450);
+  noTone(BUZZER_PIN);
+}
+
+void playNagBuzz(unsigned long weaknessSeconds) {
+  int freq = 440 + (weaknessSeconds * 20);
+  freq = min(freq, 2000);
+  int gapMs = map(weaknessSeconds, 0, 60, 400, 50);
+  gapMs = max(gapMs, 50);
+  tone(BUZZER_PIN, freq, 100);
+  delay(100);
+  noTone(BUZZER_PIN);
+  delay(gapMs);
+}`,
+      videos: [
+        { src: "https://streamable.com/e/tcquto?loop=1", title: "RFID-Enforced Focus Session Demo" },
+      ],
+    },
   },
 ]
+
+// Display order: Formula SAE, Retrodog, Timed Phone Jail, RBR, FEM, Motion-Activated Alarm (PIR)
+const projectDisplayOrder = [1, 7, 5, 2, 3, 4]
+export const projects: Project[] = projectDisplayOrder
+  .map((id) => projectsList.find((p) => p.id === id))
+  .filter((p): p is Project => Boolean(p))
 
 export const categories = [
   { id: "all", label: "All" },
