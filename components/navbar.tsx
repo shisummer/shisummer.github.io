@@ -12,9 +12,26 @@ const navItems = [
 export function Navbar() {
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
-    if (element) {
-      element.scrollIntoView({ behavior: "instant" })
+    if (!element) return
+
+    const startY = window.scrollY
+    const targetY = startY + element.getBoundingClientRect().top
+    const distance = targetY - startY
+    const duration = 250 // short, snappy duration in ms
+    let startTime: number | null = null
+
+    // ease-out so it feels responsive immediately
+    const easeOutQuad = (t: number) => t * (2 - t)
+
+    const step = (timestamp: number) => {
+      if (startTime === null) startTime = timestamp
+      const elapsed = timestamp - startTime
+      const progress = Math.min(elapsed / duration, 1)
+      window.scrollTo(0, startY + distance * easeOutQuad(progress))
+      if (progress < 1) requestAnimationFrame(step)
     }
+
+    requestAnimationFrame(step)
   }
 
   return (
