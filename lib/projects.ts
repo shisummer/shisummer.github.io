@@ -35,6 +35,12 @@ export type ProjectDetail =
       codeTitle?: string
       videos: { src: string; title: string }[]
     }
+  | {
+      layout: "gallery"
+      fullDescription: string
+      skills: { title: string; description: string }[]
+      images: { src: string; alt: string }[]
+    }
 
 export interface Project {
   id: number
@@ -93,6 +99,50 @@ const projectsList: Project[] = [
       videos: [
         { src: "https://streamable.com/e/k8g50g?loop=1", title: "Diffused Light Guidance Feature" },
         { src: "https://streamable.com/e/dhfeji?loop=1", title: "Voice-Controlled Object Retrieval & Articulation" },
+      ],
+    },
+  },
+  {
+    id: 8,
+    title: "Boeing 737 3D Model",
+    description:
+      "A detailed 3D model of the Boeing 737 built entirely in Autodesk Fusion 360, constructed from official blueprint reference images.",
+    image: "/projects/boeing1.jpg",
+    category: "mechanical",
+    tags: ["Autodesk Fusion 360", "3D Modeling", "Solid Modeling", "HDRI Rendering"],
+    detail: {
+      layout: "gallery",
+      fullDescription:
+        "A detailed 3D model of the Boeing 737 built entirely in Autodesk Fusion 360. The project began by importing official blueprint reference images into Fusion, aligning them to orthographic planes, and using them as a guide to construct each component from scratch — fuselage, wings, engines, and tail assembly.",
+      skills: [
+        {
+          title: "Blueprint-driven modeling",
+          description:
+            "Inserting and aligning multi-view reference images onto construction planes to guide proportional geometry.",
+        },
+        {
+          title: "Multi-body solid modeling",
+          description:
+            "Managing and organizing complex assemblies with many discrete solid bodies across fuselage, engines, and control surfaces.",
+        },
+        {
+          title: "Symmetry & mirroring",
+          description:
+            "Using construction planes and mirror features to maintain bilateral symmetry across the airframe.",
+        },
+        {
+          title: "HDRI rendering",
+          description:
+            "Setting up render environments with custom HDR image files for realistic lighting and background compositing.",
+        },
+      ],
+      images: [
+        { src: "/projects/boeing1.jpg", alt: "Boeing 737 3D model in flight against a cloudy blue sky." },
+        { src: "/projects/boeing5.jpg", alt: "Boeing 737 3D model banking with motion-blurred sunset background." },
+        { src: "/projects/boeing4.jpg", alt: "Front view of the Boeing 737 3D model showing the nose, engines, and wings." },
+        { src: "/projects/boeing3.jpg", alt: "Underside view of the Boeing 737 3D model flying through clouds." },
+        { src: "/projects/boeing2.jpg", alt: "Side profile of the Boeing 737 3D model against a soft sunset sky." },
+        { src: "/projects/boeing6.jpg", alt: "Top-down angled view of the Boeing 737 3D model in flight." },
       ],
     },
   },
@@ -544,8 +594,8 @@ void playNagBuzz(unsigned long weaknessSeconds) {
   },
 ]
 
-// Display order: Formula SAE, Retrodog, Timed Phone Jail, RBR, FEM, Motion-Activated Alarm (PIR)
-const projectDisplayOrder = [1, 7, 5, 2, 3, 4]
+// Display order: Formula SAE, Retrodog, Boeing 737, Timed Phone Jail, RBR, FEM, Motion-Activated Alarm (PIR)
+const projectDisplayOrder = [1, 7, 8, 5, 2, 3, 4]
 export const projects: Project[] = projectDisplayOrder
   .map((id) => projectsList.find((p) => p.id === id))
   .filter((p): p is Project => Boolean(p))
