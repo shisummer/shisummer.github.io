@@ -129,6 +129,61 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
           )}
 
+          {detail?.layout === "gallery" && (
+            <div className="space-y-8">
+              {/* Cover image */}
+              <img
+                src={detail.images[0]?.src || "/placeholder.svg"}
+                alt={detail.images[0]?.alt || project.title}
+                className="w-full rounded-xl border border-white/10"
+              />
+
+              {/* Description */}
+              <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
+                {detail.fullDescription}
+              </p>
+
+              {/* Skills learned */}
+              <div>
+                <h3 className="mb-4 text-lg md:text-xl font-semibold text-foreground tracking-tight">
+                  Skills Learned
+                </h3>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  {detail.skills.map((skill) => (
+                    <div key={skill.title} className="rounded-xl border border-white/10 bg-secondary/30 p-4">
+                      <h4 className="mb-1.5 text-sm md:text-base font-semibold text-foreground">{skill.title}</h4>
+                      <p className="text-xs md:text-sm leading-relaxed text-muted-foreground">{skill.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Remaining images, all laid out (no slider) */}
+              <div className="grid grid-cols-1 gap-6">
+                {detail.images.slice(1).map((image) => (
+                  <img
+                    key={image.src}
+                    src={image.src || "/placeholder.svg"}
+                    alt={image.alt}
+                    className="w-full rounded-xl border border-white/10"
+                  />
+                ))}
+              </div>
+
+              <div className="flex flex-wrap gap-2 pt-2">
+                {project.tags.map((tag) => (
+                  <Badge
+                    key={tag}
+                    variant="secondary"
+                    className="text-xs font-normal bg-secondary/50 text-muted-foreground border-none"
+                  >
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+
           {detail?.layout === "report" && (
             <div className="space-y-6">
               <div className="overflow-hidden rounded-xl border border-white/10 bg-black">
