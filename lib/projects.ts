@@ -138,7 +138,7 @@ const projectsList: Project[] = [
       ],
       images: [
         { src: "/projects/boeing1.jpg", alt: "Boeing 737 3D model in flight against a cloudy blue sky." },
-        { src: "/projects/boeing5.jpg", alt: "Boeing 737 3D model banking with motion-blurred sunset background." },
+        { src: "/projects/boeing-viewport.png", alt: "Boeing 737 CAD model shown in the Autodesk Fusion 360 viewport with grid background." },
         { src: "/projects/boeing4.jpg", alt: "Front view of the Boeing 737 3D model showing the nose, engines, and wings." },
         { src: "/projects/boeing3.jpg", alt: "Underside view of the Boeing 737 3D model flying through clouds." },
         { src: "/projects/boeing2.jpg", alt: "Side profile of the Boeing 737 3D model against a soft sunset sky." },
