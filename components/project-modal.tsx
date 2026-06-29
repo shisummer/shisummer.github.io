@@ -132,13 +132,11 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           {detail?.layout === "gallery" && (
             <div className="space-y-8">
               {/* Cover image */}
-              <div className="aspect-video w-full overflow-hidden rounded-xl border border-white/10">
-                <img
-                  src={detail.images[0]?.src || "/placeholder.svg"}
-                  alt={detail.images[0]?.alt || project.title}
-                  className="h-full w-full object-cover object-top"
-                />
-              </div>
+              <img
+                src={detail.images[0]?.src || "/placeholder.svg"}
+                alt={detail.images[0]?.alt || project.title}
+                className="w-full rounded-xl border border-white/10"
+              />
 
               {/* Description */}
               <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
