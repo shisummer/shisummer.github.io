@@ -104,7 +104,7 @@ const projectsList: Project[] = [
   },
   {
     id: 8,
-    title: "Boeing 737 3D Model",
+    title: "Boeing 737 3D Model: CAD Design in Autodesk Fusion 360",
     description:
       "A detailed 3D model of the Boeing 737 built entirely in Autodesk Fusion 360, constructed from official blueprint reference images.",
     image: "/projects/boeing1.jpg",
