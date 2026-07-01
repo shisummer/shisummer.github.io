@@ -113,7 +113,7 @@ const projectsList: Project[] = [
     detail: {
       layout: "gallery",
       fullDescription:
-        "A detailed 3D model of the Boeing 737 built entirely in Autodesk Fusion 360. The project began by importing official blueprint reference images into Fusion, aligning them to orthographic planes, and using them as a guide to construct each component from scratch — fuselage, wings, engines, and tail assembly.",
+        "This is a detailed 3D model of the Boeing 737 that I built entirely in Autodesk Fusion 360. I started by importing official blueprint images into Fusion and aligning them to the orthographic planes, then used them as a guide to build each part from scratch, including the fuselage, wings, engines, and tail. Right now I'm working on breaking the plane into printable sections so I can 3D print the whole model at home.",
       skills: [
         {
           title: "Blueprint-driven modeling",
