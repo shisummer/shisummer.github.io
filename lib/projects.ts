@@ -1,8 +1,7 @@
 export type ProjectDetail =
   | {
       layout: "text"
-      problem: string
-      goal: string
+      overview: string
       institution?: string
     }
   | {
@@ -653,7 +652,7 @@ export const categories = [
 export const research: Project[] = [
   {
     id: 101,
-    title: "G-Force Trainer: Passive Gyroscopic Resistance System for Astronaut Fine Motor Conditioning",
+    title: "G-Force Trainer: A Gyroscopic Wrist Trainer for Astronauts",
     description:
       "A compact (<0.1 kg) passive gyroscopic device for localized wrist and forearm conditioning in microgravity, doubling as a force-feedback controller for simulation software.",
     image: "/research/gforce-cover.png",
@@ -662,15 +661,13 @@ export const research: Project[] = [
     detail: {
       layout: "text",
       institution: "Engineering Research",
-      problem:
-        "Current long-duration space missions rely on bulky, high-power exercise systems designed almost exclusively for large muscle groups (legs, core, back). However, there is a critical gap in mission-readiness tools: astronauts lack compact, low-overhead systems for fine-motor and forearm conditioning. Without targeted training, the muscle groups required for precise tool handling, EVA (spacewalk) operations, and emergency equipment manipulation degrade. Furthermore, traditional motorized solutions add unacceptable mass, power drain, and mechanical failure risks to a spacecraft's strict payload budget.",
-      goal:
-        "The goal of this project is to design and prototype a compact, lightweight (<0.1 kg), passive gyroscopic resistance device that provides localized wrist and forearm conditioning for astronauts, minimizing musculoskeletal degradation during long-duration spaceflight. The system bridges the gap between physical health and digital training by doubling as a high-fidelity, force-feedback controller for microgravity simulation software.",
+      overview:
+        "Long-duration space missions rely on bulky, high-power exercise machines that are built almost entirely for large muscle groups like the legs, core, and back. That leaves a real gap in mission readiness: astronauts don't have a compact, low-overhead way to keep their hands and forearms in shape. Over time, the small muscles they depend on for precise tool handling, spacewalks, and emergency equipment use start to weaken, and adding another motorized machine just isn't practical when every gram of mass, watt of power, and potential point of failure counts.\n\nSo I set out to design and prototype a small, lightweight (under 0.1 kg) passive gyroscopic trainer that gives astronauts targeted wrist and forearm conditioning without any motors or added power draw. On top of the physical training, it doubles as a force-feedback controller for microgravity simulation software, so the same device that keeps astronauts physically sharp can also plug into digital training.",
     },
   },
   {
     id: 102,
-    title: "Epidemiological Data Analysis & Public Health Interface: Systemic HIV Trends in Incarcerated Populations",
+    title: "HIV Trends in Incarcerated Populations",
     description:
       "Aggregated and analyzed epidemiological data on HIV in correctional facilities, deploying a secure web platform to visualize findings for public health researchers.",
     image: "/research/hiv-research-cover.png",
@@ -679,10 +676,8 @@ export const research: Project[] = [
     detail: {
       layout: "text",
       institution: "Warren Alpert Medical School of Brown University",
-      problem:
-        "Incarcerated populations experience disproportionately higher rates of chronic infectious diseases like HIV, yet systemic data tracking within correctional facilities is fractured, qualitative, and difficult for public health officials to access. Researchers lack unified, secure digital frameworks to screen medical literature, synthesize inmate qualitative narratives, and visualize socioeconomic and systemic health barriers.",
-      goal:
-        "The main goal of this project was to aggregate, screen, and analyze epidemiological data regarding HIV prevalence, transmission vectors, and healthcare access constraints within correctional facilities. The ultimate objective was to synthesize qualitative public health data into actionable insights and deploy a custom, secure web platform to visualize findings for public health researchers.",
+      overview:
+        "Incarcerated populations deal with much higher rates of chronic infectious diseases like HIV, but the data tracking inside correctional facilities is scattered, largely qualitative, and hard for public health officials to actually use. Researchers don't have a unified, secure place to screen the medical literature, pull together inmates' firsthand accounts, and see the socioeconomic and systemic barriers to care laid out clearly.\n\nMy work focused on aggregating, screening, and analyzing epidemiological data on HIV prevalence, how it spreads, and the barriers to healthcare access within these facilities. From there, I turned the qualitative findings into clearer, actionable insights and built a secure web platform to visualize everything for public health researchers. This research is currently being prepared for publication.",
     },
   },
 ]
