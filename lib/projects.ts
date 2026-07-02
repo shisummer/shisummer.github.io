@@ -147,6 +147,49 @@ const projectsList: Project[] = [
     },
   },
   {
+    id: 9,
+    title: "Concept Vehicle: CAD Model in Autodesk Fusion",
+    description:
+      "An original concept car designed and modeled from scratch in Autodesk Fusion 360 using advanced surfacing techniques.",
+    image: "/projects/car1.jpg",
+    category: "mechanical",
+    tags: ["Autodesk Fusion 360", "Surface Modeling", "Automotive Design", "3D CAD Modeling"],
+    detail: {
+      layout: "gallery",
+      fullDescription:
+        "This project involved designing and modeling an original concept car entirely from scratch using Autodesk Fusion 360. Rather than replicating an existing vehicle, I developed my own exterior design language, starting from rough proportions and evolving them into a fully realized 3D surface model. The bodywork was constructed using advanced surfacing techniques, including sweep and loft to generate the complex, flowing curves characteristic of automotive forms, and patch to close out organic transitions between surfaces where traditional solid modeling methods fall short. This approach demanded careful attention to surface continuity and flow, ensuring the final model maintained smooth, aesthetically cohesive lines across the entire body. The project pushed my understanding of freeform surface modeling and gave me hands-on experience translating a design concept into precise, manufacturable geometry.",
+      skills: [
+        {
+          title: "Technical Skills",
+          description:
+            "Surface Modeling, Sweep & Loft Operations, Patch Modeling, Freeform / Organic Surfacing, and Surface Continuity & Curvature Analysis.",
+        },
+        {
+          title: "Automotive Design",
+          description:
+            "Developing an original exterior design language and evolving rough proportions into a cohesive vehicle form.",
+        },
+        {
+          title: "Product Design & Visualization",
+          description:
+            "Translating a design concept into presentable renders that communicate the vehicle's styling and surfaces.",
+        },
+        {
+          title: "3D CAD Modeling",
+          description:
+            "Building precise, manufacturable geometry while maintaining smooth surface flow across the entire body.",
+        },
+      ],
+      images: [
+        { src: "/projects/car-viewport.png", alt: "Concept car model shown in the Autodesk Fusion 360 viewport with grid background." },
+        { src: "/projects/car1.jpg", alt: "Front three-quarter studio render of the concept car." },
+        { src: "/projects/car2.jpg", alt: "Side profile studio render of the concept car." },
+        { src: "/projects/car3.jpg", alt: "Low front three-quarter studio render of the concept car." },
+        { src: "/projects/car4.jpg", alt: "Top-down view of the concept car." },
+      ],
+    },
+  },
+  {
     id: 2,
     title: "Rigid-body Rotation (RBR) Dynamics Simulations",
     description:
@@ -595,7 +638,7 @@ void playNagBuzz(unsigned long weaknessSeconds) {
 ]
 
 // Display order: Formula SAE, Retrodog, Boeing 737, Timed Phone Jail, RBR, FEM, Motion-Activated Alarm (PIR)
-const projectDisplayOrder = [1, 7, 8, 5, 2, 3, 4]
+const projectDisplayOrder = [1, 7, 8, 9, 5, 2, 3, 4]
 export const projects: Project[] = projectDisplayOrder
   .map((id) => projectsList.find((p) => p.id === id))
   .filter((p): p is Project => Boolean(p))
