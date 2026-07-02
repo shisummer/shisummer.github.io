@@ -70,22 +70,9 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   {detail.institution}
                 </p>
               )}
-              <div>
-                <h3 className="mb-3 text-lg md:text-xl font-semibold text-foreground tracking-tight">
-                  The Problem
-                </h3>
-                <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
-                  {detail.problem}
-                </p>
-              </div>
-              <div>
-                <h3 className="mb-3 text-lg md:text-xl font-semibold text-foreground tracking-tight">
-                  Goal &amp; Approach
-                </h3>
-                <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
-                  {detail.goal}
-                </p>
-              </div>
+              <p className="text-sm md:text-base leading-relaxed whitespace-pre-line" style={{ color: "#e5e7eb" }}>
+                {detail.overview}
+              </p>
               <div className="flex flex-wrap gap-2 pt-2">
                 {project.tags.map((tag) => (
                   <Badge

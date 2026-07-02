@@ -1,5 +1,7 @@
 "use client"
 
+import { useEffect, useState } from "react"
+
 const navItems = [
   { id: "home", label: "Home" },
   { id: "projects", label: "Projects" },
@@ -10,9 +12,40 @@ const navItems = [
 ] as const
 
 export function Navbar() {
+  const [activeId, setActiveId] = useState<string>("home")
+
+  useEffect(() => {
+    const sections = navItems
+      .map((item) => document.getElementById(item.id))
+      .filter((el): el is HTMLElement => el !== null)
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Pick the entry closest to the top of the viewport that is intersecting
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+
+        if (visible.length > 0) {
+          setActiveId(visible[0].target.id)
+        }
+      },
+      {
+        // Trigger when a section reaches the upper portion of the viewport
+        rootMargin: "-45% 0px -50% 0px",
+        threshold: 0,
+      },
+    )
+
+    sections.forEach((section) => observer.observe(section))
+    return () => observer.disconnect()
+  }, [])
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id)
     if (!element) return
+
+    setActiveId(id)
 
     const startY = window.scrollY
     const targetY = startY + element.getBoundingClientRect().top
@@ -42,7 +75,12 @@ export function Navbar() {
             <li key={item.id}>
               <button
                 onClick={() => scrollToSection(item.id)}
-                className="text-sm tracking-wide transition-colors duration-300 text-muted-foreground hover:text-foreground"
+                aria-current={activeId === item.id ? "true" : undefined}
+                className={`text-sm tracking-wide transition-colors duration-300 ${
+                  activeId === item.id
+                    ? "text-foreground font-medium"
+                    : "text-muted-foreground hover:text-foreground"
+                }`}
               >
                 {item.label}
               </button>
