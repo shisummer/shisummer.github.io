@@ -209,7 +209,7 @@ export default function PortfolioPage() {
 
                 <figure className="mt-2 overflow-hidden rounded-2xl border border-white/10 bg-white">
                   <img
-                    src="/projects/submarine.png"
+                    src="/projects/submarine-clean.png"
                     alt="3D-printed 1:96 scale test print of the Columbia-class submarine model"
                     className="w-full object-contain"
                   />

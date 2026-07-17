@@ -205,7 +205,7 @@ const projectsList: Project[] = [
       ],
       images: [
         {
-          src: "/projects/submarine.png",
+          src: "/projects/submarine-clean.png",
           alt: "First test print of the 1:96 scale Columbia-class submarine model, showing a rough matte black surface finish.",
         },
       ],
