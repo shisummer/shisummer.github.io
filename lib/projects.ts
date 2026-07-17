@@ -37,7 +37,7 @@ export type ProjectDetail =
   | {
       layout: "gallery"
       fullDescription: string
-      skills: { title: string; description: string }[]
+      skills: { title: string; description?: string }[]
       images: { src: string; alt: string }[]
     }
 
@@ -182,6 +182,32 @@ const projectsList: Project[] = [
         { src: "/projects/car2.jpg", alt: "Side profile studio render of the concept car." },
         { src: "/projects/car3.jpg", alt: "Low front three-quarter studio render of the concept car." },
         { src: "/projects/car4.jpg", alt: "Top-down view of the concept car." },
+      ],
+    },
+  },
+  {
+    id: 10,
+    title: "Columbia-class Submarine: 1:96 Scale Model & Additive Manufacturing",
+    description:
+      "A high-fidelity 1:96 scale replica of the Columbia-class submarine modeled in PTC Creo and 3D printed as a 5.8-foot assembly, delivered to the Navy Yard in Washington, DC.",
+    image: "/projects/submarine-cover.png",
+    category: "mechanical",
+    tags: ["PTC Creo", "Additive Manufacturing", "Design for Manufacturing", "3D Printing"],
+    detail: {
+      layout: "gallery",
+      fullDescription:
+        "I modeled a high-fidelity 1:96 scale replica of the Columbia-class submarine in PTC Creo, running geometric verification and spatial analysis along the way. From there, I led the additive manufacturing effort to prototype the design, validating assembly alignment and mechanical tolerances on real hardware. For security reasons, the actual Creo model can't be shown here, and to be clear, this model does not use any classified dimensions.\n\nOne of the biggest challenges was detail resolution. The final model measured 5.8 feet long and had to be printed in six separate sections, so I designed joining mechanisms to connect all six pieces into one continuous body. The finished product was delivered to the Navy Yard in Washington, DC. Shown above is the first test print, where the surface finish came out rough, so I recalibrated the industrial printer before running the final print. I also experimented with smoothing the surface using acetone as well as sanding and polishing. Since the matte coating used on the final print didn't react well to acetone, I went with sanding and polishing for the finish. This project also taught me a lot about Design for Manufacturing. To cut down on print time and cost, I hollowed out the center of the model, and I went back to refine several details so they would resolve more cleanly on the final print.",
+      skills: [
+        { title: "PTC Creo" },
+        { title: "Rapid Prototyping" },
+        { title: "Industrial 3D Printer" },
+        { title: "Stratasys Fortus 450mc Printer" },
+      ],
+      images: [
+        {
+          src: "/projects/submarine-clean.png",
+          alt: "First test print of the 1:96 scale Columbia-class submarine model, showing a rough matte black surface finish.",
+        },
       ],
     },
   },
@@ -634,7 +660,7 @@ void playNagBuzz(unsigned long weaknessSeconds) {
 ]
 
 // Display order: Formula SAE, Retrodog, Boeing 737, Timed Phone Jail, RBR, FEM, Motion-Activated Alarm (PIR)
-const projectDisplayOrder = [1, 7, 8, 9, 5, 2, 3, 4]
+const projectDisplayOrder = [1, 10, 7, 8, 9, 5, 2, 3, 4]
 export const projects: Project[] = projectDisplayOrder
   .map((id) => projectsList.find((p) => p.id === id))
   .filter((p): p is Project => Boolean(p))
