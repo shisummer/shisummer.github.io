@@ -206,6 +206,18 @@ export default function PortfolioPage() {
                     </li>
                   ))}
                 </ul>
+
+                <figure className="mt-2 overflow-hidden rounded-2xl border border-white/10 bg-white">
+                  <img
+                    src="/projects/submarine.png"
+                    alt="3D-printed 1:96 scale test print of the Columbia-class submarine model"
+                    className="w-full object-contain"
+                  />
+                  <figcaption className="px-4 py-3 text-sm text-muted-foreground bg-white/[0.04]">
+                    First test print of the 1:96 scale Columbia-class submarine model, prototyped during my time
+                    supporting the program.
+                  </figcaption>
+                </figure>
               </div>
             </div>
           </div>

@@ -126,7 +126,10 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               />
 
               {/* Description */}
-              <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
+              <p
+                className="text-sm md:text-base leading-relaxed whitespace-pre-line"
+                style={{ color: "#e5e7eb" }}
+              >
                 {detail.fullDescription}
               </p>
 
@@ -138,8 +141,12 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {detail.skills.map((skill) => (
                     <div key={skill.title} className="rounded-xl border border-white/10 bg-secondary/30 p-4">
-                      <h4 className="mb-1.5 text-sm md:text-base font-semibold text-foreground">{skill.title}</h4>
-                      <p className="text-xs md:text-sm leading-relaxed text-muted-foreground">{skill.description}</p>
+                      <h4 className="text-sm md:text-base font-semibold text-foreground">{skill.title}</h4>
+                      {skill.description && (
+                        <p className="mt-1.5 text-xs md:text-sm leading-relaxed text-muted-foreground">
+                          {skill.description}
+                        </p>
+                      )}
                     </div>
                   ))}
                 </div>
