@@ -187,7 +187,7 @@ const projectsList: Project[] = [
   },
   {
     id: 10,
-    title: "Columbia-class Submarine: Scale Model & Additive Manufacturing",
+    title: "Columbia-class Submarine: 1:96 Scale Model & Additive Manufacturing",
     description:
       "A high-fidelity 1:96 scale replica of the Columbia-class submarine modeled in PTC Creo and 3D printed as a 5.8-foot assembly, delivered to the Navy Yard in Washington, DC.",
     image: "/projects/submarine-cover.png",
@@ -196,7 +196,7 @@ const projectsList: Project[] = [
     detail: {
       layout: "gallery",
       fullDescription:
-        "I modeled a high-fidelity 1:96 scale replica of the Columbia-class submarine in PTC Creo, running geometric verification and spatial analysis along the way. From there, I led the additive manufacturing effort to prototype the design, validating assembly alignment and mechanical tolerances on real hardware. For security reasons, the actual Creo model can't be shown here.\n\nOne of the biggest challenges was detail resolution. The final model measured 5.8 feet long and had to be printed in six separate sections, so I designed joining mechanisms to connect all six pieces into one continuous body. The finished product was delivered to the Navy Yard in Washington, DC. Shown above is the first test print, where the surface finish came out rough, so I recalibrated the industrial printer before running the final print. I also experimented with smoothing the surface using acetone as well as sanding and polishing. Since the matte material used on the final print didn't react well to acetone, I went with sanding and polishing for the finish. This project also taught me a lot about Design for Manufacturing. To cut down on print time and cost, I hollowed out the center of the model, and I went back to refine several details so they would resolve more cleanly on the final print.",
+        "I modeled a high-fidelity 1:96 scale replica of the Columbia-class submarine in PTC Creo, running geometric verification and spatial analysis along the way. From there, I led the additive manufacturing effort to prototype the design, validating assembly alignment and mechanical tolerances on real hardware. For security reasons, the actual Creo model can't be shown here, and to be clear, this model does not use any classified dimensions.\n\nOne of the biggest challenges was detail resolution. The final model measured 5.8 feet long and had to be printed in six separate sections, so I designed joining mechanisms to connect all six pieces into one continuous body. The finished product was delivered to the Navy Yard in Washington, DC. Shown above is the first test print, where the surface finish came out rough, so I recalibrated the industrial printer before running the final print. I also experimented with smoothing the surface using acetone as well as sanding and polishing. Since the matte material used on the final print didn't react well to acetone, I went with sanding and polishing for the finish. This project also taught me a lot about Design for Manufacturing. To cut down on print time and cost, I hollowed out the center of the model, and I went back to refine several details so they would resolve more cleanly on the final print.",
       skills: [
         { title: "PTC Creo" },
         { title: "Rapid Prototyping" },
