@@ -19,7 +19,7 @@ const upcomingCourses = [
 ]
 
 const industryHighlights = [
-  "Engineered a high-fidelity, 1:96 scale digital twin of the Columbia-class submarine using PTC Creo, executing complex geometric modeling to support design verification and spatial analysis.",
+  "Engineered a high-fidelity, 1:96 scale visual replica of the Columbia-class submarine using PTC Creo, executing complex geometric modeling to support design verification and spatial analysis.",
   "Leaned into additive manufacturing (3D printing) technologies to rapidly prototype the CAD model, validating physical tolerances, structural integrity, and assembly alignment.",
   "Conducted multi-disciplinary impact reviews of proposed modifications, evaluating both electrical configurations and mechanical interfaces to identify potential failure points and prevent unintended cascading risks across sub-systems.",
   "Evaluated and processed Proposed Notice of Change (PNOCs) and technical documentation from prime contractors, including Lockheed Martin Space and General Dynamics Mission Systems, ensuring cross-enterprise compliance with configuration management workflows.",
@@ -213,7 +213,7 @@ export default function PortfolioPage() {
                     alt="3D-printed 1:96 scale test print of the Columbia-class submarine model"
                     className="w-full object-contain"
                   />
-                  <figcaption className="px-4 py-3 text-sm text-muted-foreground bg-white/[0.04]">
+                  <figcaption className="px-4 py-3 text-sm text-black bg-white">
                     First test print of the 1:96 scale Columbia-class submarine model, prototyped during my time
                     supporting the program.
                   </figcaption>

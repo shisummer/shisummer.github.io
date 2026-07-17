@@ -660,7 +660,7 @@ void playNagBuzz(unsigned long weaknessSeconds) {
 ]
 
 // Display order: Formula SAE, Retrodog, Boeing 737, Timed Phone Jail, RBR, FEM, Motion-Activated Alarm (PIR)
-const projectDisplayOrder = [1, 7, 8, 9, 10, 5, 2, 3, 4]
+const projectDisplayOrder = [1, 10, 7, 8, 9, 5, 2, 3, 4]
 export const projects: Project[] = projectDisplayOrder
   .map((id) => projectsList.find((p) => p.id === id))
   .filter((p): p is Project => Boolean(p))
