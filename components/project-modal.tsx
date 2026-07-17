@@ -102,6 +102,14 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                 alt={detail.bottomImage.alt}
                 className="w-full rounded-xl border border-white/10"
               />
+              {detail.extraImages?.map((img) => (
+                <img
+                  key={img.src}
+                  src={img.src || "/placeholder.svg"}
+                  alt={img.alt}
+                  className="w-full rounded-xl border border-white/10"
+                />
+              ))}
               <div className="flex flex-wrap gap-2 pt-2">
                 {project.tags.map((tag) => (
                   <Badge

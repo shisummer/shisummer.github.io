@@ -9,6 +9,7 @@ export type ProjectDetail =
       fullDescription: string
       topImage: { src: string; alt: string }
       bottomImage: { src: string; alt: string }
+      extraImages?: { src: string; alt: string }[]
     }
   | {
       layout: "split"
@@ -74,6 +75,12 @@ const projectsList: Project[] = [
         src: "/projects/fsae-assembly-hub.png",
         alt: "Close-up CAD render of the Formula SAE drivetrain hub assembly, showing the gold differential hub between the sprocket and brake rotors on the axle.",
       },
+      extraImages: [
+        {
+          src: "/projects/fsae-assembly-front-clean.png",
+          alt: "Front-on CAD render of the Formula SAE drivetrain hub assembly, showing the gold differential hub flanked by silver rotor discs on the axle.",
+        },
+      ],
     },
   },
   {
