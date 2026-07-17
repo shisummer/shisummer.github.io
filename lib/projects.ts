@@ -71,8 +71,8 @@ const projectsList: Project[] = [
       fullDescription:
         "As a mechanical engineer on the Formula SAE team, I engineered and optimized critical high-performance drivetrain components, including the differential housing, sprockets, half-shafts, and eccentric disks. Utilizing SolidWorks and ANSYS, I conducted extensive Finite Element Analysis (FEA) to evaluate torsional stiffness, fatigue life, and stress concentrations, ultimately achieving a 15% increase in component stiffness alongside a 12% reduction in overall mass. To prepare the vehicle for competition, I iterated complex CAD models to ensure strict compliance with FSAE regulations while driving Design for Manufacturing (DFM) and Design for Assembly (DFA) initiatives. This involved closely optimizing part geometry, tolerances, and material selection, as well as collaborating across sub-teams to streamline wiring harness routing and custom PCB mounting. Finally, I partnered with manufacturing and testing teams to validate performance and safety standards through CNC machining trials, rigorous bench testing, and direct on-car telemetry evaluation.",
       bottomImage: {
-        src: "/projects/fsae-assembly.png",
-        alt: "CAD render of the fully assembled Formula SAE drivetrain mounted between the sprocket and brake disc.",
+        src: "/projects/fsae-assembly-hub.png",
+        alt: "Close-up CAD render of the Formula SAE drivetrain hub assembly, showing the gold differential hub between the sprocket and brake rotors on the axle.",
       },
     },
   },
