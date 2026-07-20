@@ -194,6 +194,10 @@ export default function PortfolioPage() {
                       className="h-9 w-auto object-contain"
                     />
                     <p className="mt-3 text-lg text-muted-foreground">Systems Engineering Intern</p>
+                    <span className="mt-3 inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-white/[0.06] px-3 py-1 text-sm font-medium text-foreground">
+                      <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-foreground/60" />
+                      Secret Clearance Sponsored &mdash; In Progress
+                    </span>
                   </div>
                   <p className="text-sm font-medium text-muted-foreground">05/15/2026 &ndash; 08/15/2026</p>
                 </div>

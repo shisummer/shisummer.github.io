@@ -9,6 +9,7 @@ export type ProjectDetail =
       fullDescription: string
       topImage: { src: string; alt: string }
       bottomImage: { src: string; alt: string }
+      extraImages?: { src: string; alt: string }[]
     }
   | {
       layout: "split"
@@ -38,7 +39,7 @@ export type ProjectDetail =
       layout: "gallery"
       fullDescription: string
       skills: { title: string; description?: string }[]
-      images: { src: string; alt: string }[]
+      images: { src: string; alt: string; caption?: string }[]
     }
 
 export interface Project {
@@ -71,9 +72,15 @@ const projectsList: Project[] = [
       fullDescription:
         "As a mechanical engineer on the Formula SAE team, I engineered and optimized critical high-performance drivetrain components, including the differential housing, sprockets, half-shafts, and eccentric disks. Utilizing SolidWorks and ANSYS, I conducted extensive Finite Element Analysis (FEA) to evaluate torsional stiffness, fatigue life, and stress concentrations, ultimately achieving a 15% increase in component stiffness alongside a 12% reduction in overall mass. To prepare the vehicle for competition, I iterated complex CAD models to ensure strict compliance with FSAE regulations while driving Design for Manufacturing (DFM) and Design for Assembly (DFA) initiatives. This involved closely optimizing part geometry, tolerances, and material selection, as well as collaborating across sub-teams to streamline wiring harness routing and custom PCB mounting. Finally, I partnered with manufacturing and testing teams to validate performance and safety standards through CNC machining trials, rigorous bench testing, and direct on-car telemetry evaluation.",
       bottomImage: {
-        src: "/projects/fsae-assembly.png",
-        alt: "CAD render of the fully assembled Formula SAE drivetrain mounted between the sprocket and brake disc.",
+        src: "/projects/fsae-assembly-hub.png",
+        alt: "Close-up CAD render of the Formula SAE drivetrain hub assembly, showing the gold differential hub between the sprocket and brake rotors on the axle.",
       },
+      extraImages: [
+        {
+          src: "/projects/fsae-assembly-front-clean.png",
+          alt: "Front-on CAD render of the Formula SAE drivetrain hub assembly, showing the gold differential hub flanked by silver rotor discs on the axle.",
+        },
+      ],
     },
   },
   {
@@ -196,7 +203,7 @@ const projectsList: Project[] = [
     detail: {
       layout: "gallery",
       fullDescription:
-        "I modeled a high-fidelity 1:96 scale replica of the Columbia-class submarine in PTC Creo, running geometric verification and spatial analysis along the way. From there, I led the additive manufacturing effort to prototype the design, validating assembly alignment and mechanical tolerances on real hardware. For security reasons, the actual Creo model can't be shown here, and to be clear, this model does not use any classified dimensions.\n\nOne of the biggest challenges was detail resolution. The final model measured 5.8 feet long and had to be printed in six separate sections, so I designed joining mechanisms to connect all six pieces into one continuous body. The finished product was delivered to the Navy Yard in Washington, DC. Shown above is the first test print, where the surface finish came out rough, so I recalibrated the industrial printer before running the final print. I also experimented with smoothing the surface using acetone as well as sanding and polishing. Since the matte coating used on the final print didn't react well to acetone, I went with sanding and polishing for the finish. This project also taught me a lot about Design for Manufacturing. To cut down on print time and cost, I hollowed out the center of the model, and I went back to refine several details so they would resolve more cleanly on the final print.",
+        "I modeled a high-fidelity 1:96 scale replica of the Columbia-class submarine in PTC Creo, running geometric verification and spatial analysis along the way. From there, I led the additive manufacturing effort to prototype the design, validating assembly alignment and mechanical tolerances on real hardware. For security reasons, the actual Creo model can't be shown here, and to be clear, this model does not use any classified dimensions.\n\nOne of the biggest challenges was detail resolution. The final model measured 5.8 feet long and had to be printed in six separate sections, so I designed joining mechanisms to connect all six pieces into one continuous body. The finished product was delivered to the Navy Yard in Washington, DC. Shown above is the first test print, where the surface finish came out rough, so I recalibrated the industrial printer before running the final print. I also experimented with smoothing the surface using acetone as well as sanding and polishing. Since the matte coating used on the final print didn't react well to acetone, I went with sanding and polishing for the finish. This project also taught me a lot about Design for Manufacturing. To cut down on print time and cost, I hollowed out the center of the model, and I went back to refine several details so they would resolve more cleanly on the final print.\n\nSecurity Clearance: As part of my work supporting this program, my employer is sponsoring me for a U.S. Secret security clearance, which is currently in progress. I do not hold the clearance yet.",
       skills: [
         { title: "PTC Creo" },
         { title: "Rapid Prototyping" },
@@ -207,6 +214,11 @@ const projectsList: Project[] = [
         {
           src: "/projects/submarine-clean.png",
           alt: "First test print of the 1:96 scale Columbia-class submarine model, showing a rough matte black surface finish.",
+        },
+        {
+          src: "/projects/submarine-acetone-clean.png",
+          alt: "Glossy black Columbia-class submarine model with a smoothed finish after acetone treatment.",
+          caption: "The model after being placed in an acetone chamber for smoothing, giving it a glossy finish.",
         },
       ],
     },
