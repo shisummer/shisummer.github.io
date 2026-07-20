@@ -162,14 +162,24 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
 
               {/* Remaining images, all laid out (no slider) */}
               <div className="grid grid-cols-1 gap-6">
-                {detail.images.slice(1).map((image) => (
-                  <img
-                    key={image.src}
-                    src={image.src || "/placeholder.svg"}
-                    alt={image.alt}
-                    className="w-full rounded-xl border border-white/10"
-                  />
-                ))}
+                {detail.images.slice(1).map((image) =>
+                  image.caption ? (
+                    <figure
+                      key={image.src}
+                      className="overflow-hidden rounded-xl border border-white/10 bg-white"
+                    >
+                      <img src={image.src || "/placeholder.svg"} alt={image.alt} className="w-full object-contain" />
+                      <figcaption className="px-4 py-3 text-sm text-black bg-white">{image.caption}</figcaption>
+                    </figure>
+                  ) : (
+                    <img
+                      key={image.src}
+                      src={image.src || "/placeholder.svg"}
+                      alt={image.alt}
+                      className="w-full rounded-xl border border-white/10"
+                    />
+                  ),
+                )}
               </div>
 
               <div className="flex flex-wrap gap-2 pt-2">
