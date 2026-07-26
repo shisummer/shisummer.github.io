@@ -127,11 +127,24 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
           {detail?.layout === "gallery" && (
             <div className="space-y-8">
               {/* Cover image */}
-              <img
-                src={detail.images[0]?.src || "/placeholder.svg"}
-                alt={detail.images[0]?.alt || project.title}
-                className="w-full rounded-xl border border-white/10"
-              />
+              {detail.images[0]?.caption ? (
+                <figure className="overflow-hidden rounded-xl border border-white/10 bg-white">
+                  <img
+                    src={detail.images[0]?.src || "/placeholder.svg"}
+                    alt={detail.images[0]?.alt || project.title}
+                    className="w-full object-contain"
+                  />
+                  <figcaption className="px-4 py-3 text-sm text-black bg-white">
+                    {detail.images[0].caption}
+                  </figcaption>
+                </figure>
+              ) : (
+                <img
+                  src={detail.images[0]?.src || "/placeholder.svg"}
+                  alt={detail.images[0]?.alt || project.title}
+                  className="w-full rounded-xl border border-white/10"
+                />
+              )}
 
               {/* Description */}
               <p
