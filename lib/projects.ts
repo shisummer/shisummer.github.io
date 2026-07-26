@@ -197,13 +197,13 @@ const projectsList: Project[] = [
     title: "Columbia-class Submarine: 1:96 Scale Model & Additive Manufacturing",
     description:
       "A high-fidelity 1:96 scale replica of the Columbia-class submarine modeled in PTC Creo and 3D printed as a 5.8-foot assembly, delivered to the Navy Yard in Washington, DC.",
-    image: "/projects/submarine-cover.png",
+    image: "/projects/columbia-navy.jpg",
     category: "mechanical",
     tags: ["PTC Creo", "Additive Manufacturing", "Design for Manufacturing", "3D Printing"],
     detail: {
       layout: "gallery",
       fullDescription:
-        "I modeled a high-fidelity 1:96 scale replica of the Columbia-class submarine in PTC Creo, running geometric verification and spatial analysis along the way. From there, I led the additive manufacturing effort to prototype the design, validating assembly alignment and mechanical tolerances on real hardware. For security reasons, the actual Creo model can't be shown here. The model was made based off of publicly available images, and its dimensions aren't accurate to the real thing. I also received authorization to use the images shown here.\n\nOne of the biggest challenges was detail resolution. The final model measured 5.8 feet long and had to be printed in six separate sections, so I designed joining mechanisms to connect all six pieces into one continuous body. The finished product was delivered to the Navy Yard in Washington, DC. Shown above is the first test print, where the surface finish came out rough, so I recalibrated the industrial printer before running the final print. I also experimented with smoothing the surface using acetone as well as sanding and polishing. Since the matte coating used on the final print didn't react well to acetone, I went with sanding and polishing for the finish. This project also taught me a lot about Design for Manufacturing. To cut down on print time and cost, I hollowed out the center of the model, and I went back to refine several details so they would resolve more cleanly on the final print.\n\nSecurity Clearance: As part of my work supporting this program, my employer is sponsoring me for a U.S. Secret security clearance, which is currently in progress. I do not hold the clearance yet.",
+        "I modeled a high-fidelity 1:96 scale replica of the Columbia-class submarine in PTC Creo, running geometric verification and spatial analysis along the way. From there, I led the additive manufacturing effort to prototype the design, validating assembly alignment and mechanical tolerances on real hardware. For security reasons, the final product can't be shown here. The image shown is a publicly available photo taken from online; my actual model is more detailed. The model was made based off of publicly available images, and its dimensions aren't accurate to the real thing.\n\nOne of the biggest challenges was detail resolution. The final model measured 5.8 feet long and had to be printed in six separate sections, so I designed joining mechanisms to connect all six pieces into one continuous body. The finished product was delivered to the Navy Yard in Washington, DC. This project also taught me a lot about Design for Manufacturing. To cut down on print time and cost, I hollowed out the center of the model, and I went back to refine several details so they would resolve more cleanly on the final print.\n\nSecurity Clearance: As part of my work supporting this program, my employer is sponsoring me for a U.S. Secret security clearance, which is currently in progress. I do not hold the clearance yet.",
       skills: [
         { title: "PTC Creo" },
         { title: "Rapid Prototyping" },
@@ -212,13 +212,10 @@ const projectsList: Project[] = [
       ],
       images: [
         {
-          src: "/projects/submarine-clean.png",
-          alt: "First test print of the 1:96 scale Columbia-class submarine model, showing a rough matte black surface finish.",
-        },
-        {
-          src: "/projects/submarine-acetone-clean.png",
-          alt: "Glossy black Columbia-class submarine model with a smoothed finish after acetone treatment.",
-          caption: "The model after being placed in an acetone chamber for smoothing, giving it a glossy finish.",
+          src: "/projects/columbia-navy.jpg",
+          alt: "A Columbia-class ballistic missile submarine on the surface at sea.",
+          caption:
+            "The final product isn't shown here for security reasons. This image is taken from online; my actual model is more detailed.",
         },
       ],
     },
