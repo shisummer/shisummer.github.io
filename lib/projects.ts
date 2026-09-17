@@ -33,6 +33,9 @@ export type ProjectDetail =
       code: string
       codeLanguage: string
       codeTitle?: string
+      secondCode?: string
+      secondCodeLanguage?: string
+      secondCodeTitle?: string
       videos: { src: string; title: string }[]
     }
   | {
@@ -666,10 +669,495 @@ void playNagBuzz(unsigned long weaknessSeconds) {
       ],
     },
   },
+  {
+    id: 11,
+    title: "LCD Runner: Arduino Dinosaur Game / Reconfigurable Button-Game Platform",
+    description:
+      "A one-button recreation of the Chrome dinosaur game on an Arduino R4, running on a 16x2 LCD with a buzzer for jumps and collisions.",
+    image: "/projects/lcd-runner-cover.jpg",
+    category: "electrical",
+    tags: ["Arduino R4", "C++", "I2C LCD", "Buzzer", "Embedded Systems", "Game Firmware"],
+    detail: {
+      layout: "code",
+      fullDescription:
+        "This project recreates the classic Chrome dinosaur game entirely in firmware on an Arduino R4. The gameplay is deliberately simple: anytime you press the button, the character jumps. Time your jumps to clear the cacti (and duck-jump the birds) as the game steadily speeds up, and try to beat your saved high score.\n\nThe hardware is minimal, a single button for input, a 16x2 LCD (the 16-pin character display) for all the graphics, and a buzzer that chirps every time you jump and plays a short game-over tone the moment you hit a cactus and end the run. The runner, obstacles, and jump pose are all drawn as custom 5x8 LCD characters, and the game only redraws the cells that actually change so the animation stays smooth on the low-resolution display. The high score is written to EEPROM so it survives a power cycle.\n\nBecause everything lives in software, this same button-LCD-buzzer setup can become an entirely different game just by swapping the firmware, no rewiring required. For example, the same single-button input could drive a stacking game, where each press drops another rectangle onto a growing tower and the goal is to keep the stack aligned as it climbs higher. The physical build is a reusable one-button arcade platform; the firmware decides what game you're playing.",
+      codeLanguage: "cpp",
+      codeTitle: "lcd_runner.ino",
+      secondCodeLanguage: "cpp",
+      videos: [
+        { src: "https://streamable.com/e/n5f8md?loop=1", title: "Dinosaur Game" },
+        { src: "https://streamable.com/e/5vc83h?loop=1", title: "Stacker Game" },
+      ],
+      secondCodeTitle: "lcd_stacker.ino",
+      secondCode: `#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <EEPROM.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// ----- Pins -----
+const int BUTTON_PIN = 7;
+const int BUZZER_PIN = 8;
+
+// ----- Game settings (try changing these!) -----
+const int FIELD = 12;            // play area is columns 0-11
+const int START_WIDTH = 5;       // starting block width
+const int MAX_WIDTH = 5;         // widest a block can grow back to
+const long START_SPEED = 220;    // ms per move at the start
+const long MIN_SPEED = 55;       // fastest the game can get
+const int EEPROM_ADDR = 4;       // different spot than the runner's high score
+
+// ----- Custom characters -----
+const byte BLOCK = 0;   // solid block (the moving one)
+const byte TOWER = 1;   // outlined block (the one you stack onto)
+
+byte blockSprite[8] = {0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111};
+byte towerSprite[8] = {0b11111, 0b10001, 0b10101, 0b10001, 0b10101, 0b10001, 0b11111, 0b00000};
+
+// ----- Game state -----
+enum State { TITLE, PLAYING, GAME_OVER };
+State state = TITLE;
+
+int prevStart, prevWidth;   // the block you're stacking onto (top row)
+int curStart, curWidth;     // the moving block (bottom row)
+int dir = 1;                // 1 = moving right, -1 = moving left
+int score = 0;
+int streak = 0;             // perfect drops in a row
+uint16_t best = 0;
+long tickLength = START_SPEED;
+unsigned long lastTick = 0;
+
+byte shown[2][16];
+bool lastButton = HIGH;
+unsigned long lastChange = 0;
+
+// ----- Screen helpers -----
+void putCell(int col, int row, byte ch) {
+  if (shown[row][col] == ch) return;
+  lcd.setCursor(col, row);
+  lcd.write(ch);
+  shown[row][col] = ch;
+}
+
+void clearScreen() {
+  lcd.clear();
+  for (int r = 0; r < 2; r++)
+    for (int c = 0; c < 16; c++)
+      shown[r][c] = ' ';
+}
+
+// ----- Button: true once per press -----
+bool buttonPressed() {
+  bool now = digitalRead(BUTTON_PIN);
+  if (now != lastButton && millis() - lastChange > 30) {
+    lastChange = millis();
+    lastButton = now;
+    return now == LOW;
+  }
+  return false;
+}
+
+// ----- Drawing -----
+void drawField() {
+  for (int c = 0; c < FIELD; c++) {
+    bool inPrev = (c >= prevStart && c < prevStart + prevWidth);
+    bool inCur  = (c >= curStart && c < curStart + curWidth);
+    putCell(c, 0, inPrev ? TOWER : ' ');
+    putCell(c, 1, inCur ? BLOCK : ' ');
+  }
+}
+
+void drawHud() {
+  putCell(FIELD, 0, '|');
+  putCell(FIELD, 1, '|');
+
+  char buf[4];
+  snprintf(buf, sizeof(buf), "%3d", score);
+  for (int i = 0; i < 3; i++) putCell(FIELD + 1 + i, 0, buf[i]);
+
+  // stars show your perfect-drop streak
+  for (int i = 0; i < 3; i++) putCell(FIELD + 1 + i, 1, i < streak ? '*' : ' ');
+}
+
+void showTitle() {
+  clearScreen();
+  lcd.setCursor(2, 0);
+  lcd.print("LCD STACKER");
+  lcd.setCursor(1, 1);
+  lcd.print("Press to start");
+}
+
+// ----- Game logic -----
+void startGame() {
+  prevWidth = START_WIDTH;
+  prevStart = (FIELD - START_WIDTH) / 2;
+  curWidth = START_WIDTH;
+  curStart = 0;
+  dir = 1;
+  score = 0;
+  streak = 0;
+  tickLength = START_SPEED;
+
+  clearScreen();
+  state = PLAYING;
+  drawField();
+  drawHud();
+  lastTick = millis();
+}
+
+void moveBlock() {
+  int next = curStart + dir;
+  if (next < 0 || next + curWidth > FIELD) {
+    dir = -dir;              // bounce off the wall
+    next = curStart + dir;
+  }
+  curStart = next;
+  drawField();
+}
+
+void gameOver() {
+  state = GAME_OVER;
+  tone(BUZZER_PIN, 300, 150);
+  delay(170);
+  tone(BUZZER_PIN, 180, 300);
+  delay(700);
+
+  if (score > best) {
+    best = score;
+    EEPROM.put(EEPROM_ADDR, best);
+  }
+
+  clearScreen();
+  lcd.setCursor(0, 0);
+  lcd.print("GAME OVER Lv ");
+  lcd.print(score);
+  lcd.setCursor(0, 1);
+  lcd.print("Best: ");
+  lcd.print(best);
+}
+
+void dropBlock() {
+  int left  = max(curStart, prevStart);
+  int right = min(curStart + curWidth, prevStart + prevWidth);
+  int newWidth = right - left;
+  bool perfect = (newWidth == prevWidth);
+
+  // flash the part that gets chopped off
+  if (!perfect) tone(BUZZER_PIN, 220, 120);
+  for (int i = 0; i < 4; i++) {
+    for (int c = curStart; c < curStart + curWidth; c++) {
+      if (c < left || c >= right) putCell(c, 1, (i % 2 == 0) ? ' ' : BLOCK);
+    }
+    delay(90);
+  }
+
+  if (newWidth <= 0) {
+    gameOver();
+    return;
+  }
+
+  if (perfect) {
+    streak++;
+    tone(BUZZER_PIN, 1320, 80);
+    if (streak >= 3) {
+      streak = 0;
+      if (newWidth < MAX_WIDTH) {
+        newWidth++;                                   // reward: block grows back
+        if (left + newWidth > FIELD) left--;
+        delay(100);
+        tone(BUZZER_PIN, 1760, 120);
+      }
+    }
+  } else {
+    streak = 0;
+  }
+
+  if (score < 999) score++;
+
+  // the dropped block becomes the new target
+  prevStart = left;
+  prevWidth = newWidth;
+  curWidth = newWidth;
+
+  // next block starts from alternating sides
+  if (score % 2 == 1) { curStart = 0; dir = 1; }
+  else                { curStart = FIELD - curWidth; dir = -1; }
+
+  tickLength = START_SPEED - score * 8;
+  if (tickLength < MIN_SPEED) tickLength = MIN_SPEED;
+
+  drawField();
+  drawHud();
+  lastTick = millis();
+}
+
+// ----- Main -----
+void setup() {
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+  lcd.init();
+  lcd.backlight();
+  lcd.createChar(BLOCK, blockSprite);
+  lcd.createChar(TOWER, towerSprite);
+
+  EEPROM.get(EEPROM_ADDR, best);
+  if (best > 999) best = 0;   // fresh memory reads as garbage
+
+  showTitle();
+}
+
+void loop() {
+  bool pressed = buttonPressed();
+
+  if (state != PLAYING) {
+    if (pressed) startGame();
+    return;
+  }
+
+  if (pressed) {
+    dropBlock();
+    return;
+  }
+
+  if (millis() - lastTick >= (unsigned long)tickLength) {
+    lastTick = millis();
+    moveBlock();
+  }
+}
+`,
+      code: `#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <EEPROM.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// ----- Pins -----
+const int BUTTON_PIN = 7;
+const int BUZZER_PIN = 8;
+
+// ----- Game settings (try changing these!) -----
+const int RUNNER_COL = 1;              // column the runner stays in
+const int SCORE_COL = 12;              // score uses top row, columns 12-15
+const int JUMP_TICKS = 4;              // how long a jump lasts
+const int MIN_GAP = 5;                 // minimum space between obstacles
+const long START_SPEED = 250;          // ms per step at the start
+const long MIN_SPEED = 90;             // fastest the game can get
+
+// ----- Custom character slots -----
+const byte RUN1 = 0, RUN2 = 1, JUMP = 2, CACTUS = 3, BIRD = 4;
+const byte EMPTY = ' ';
+
+// ----- Sprites (5 wide x 8 tall, 1 = pixel on) -----
+byte run1Sprite[8]   = {0b01110, 0b01110, 0b00100, 0b01110, 0b10101, 0b00100, 0b01010, 0b10001};
+byte run2Sprite[8]   = {0b01110, 0b01110, 0b00100, 0b01110, 0b10101, 0b00100, 0b01010, 0b01010};
+byte jumpSprite[8]   = {0b01110, 0b01110, 0b10101, 0b01110, 0b00100, 0b01010, 0b10001, 0b00000};
+byte cactusSprite[8] = {0b00100, 0b00101, 0b10101, 0b10101, 0b10111, 0b11100, 0b00100, 0b00100};
+byte birdSprite[8]   = {0b00000, 0b01000, 0b01100, 0b11111, 0b00110, 0b00000, 0b00000, 0b00000};
+
+// ----- Game state -----
+byte ground[16];     // obstacles on the bottom row
+byte sky[16];        // obstacles on the top row
+byte shown[2][16];   // what's currently on the screen (so we only redraw changes)
+
+enum State { TITLE, PLAYING, GAME_OVER };
+State state = TITLE;
+
+int airTime = 0;     // > 0 means the runner is in the air
+int score = 0;
+uint16_t best = 0;
+int gap = 0;         // steps since the last obstacle appeared
+bool frame = false;  // switches between the two running frames
+long tickLength = START_SPEED;
+unsigned long lastTick = 0;
+
+bool lastButton = HIGH;
+unsigned long lastChange = 0;
+
+// ----- Screen helpers -----
+void putCell(int col, int row, byte ch) {
+  if (shown[row][col] == ch) return;   // already showing this, skip
+  lcd.setCursor(col, row);
+  lcd.write(ch);
+  shown[row][col] = ch;
+}
+
+void clearScreen() {
+  lcd.clear();
+  for (int r = 0; r < 2; r++)
+    for (int c = 0; c < 16; c++)
+      shown[r][c] = ' ';
+}
+
+// ----- Button: returns true once per press, ignores contact bounce -----
+bool buttonPressed() {
+  bool now = digitalRead(BUTTON_PIN);
+  if (now != lastButton && millis() - lastChange > 30) {
+    lastChange = millis();
+    lastButton = now;
+    return now == LOW;
+  }
+  return false;
+}
+
+// ----- Drawing -----
+void drawGame() {
+  for (int c = 0; c < 16; c++) {
+    byte bottom = ground[c];
+    byte top = sky[c];
+
+    if (c == RUNNER_COL) {
+      if (airTime > 0) top = JUMP;
+      else bottom = frame ? RUN1 : RUN2;
+    }
+
+    putCell(c, 1, bottom);
+    if (c < SCORE_COL) putCell(c, 0, top);  // birds hide behind the score
+  }
+
+  char buf[5];
+  snprintf(buf, sizeof(buf), "%4d", score);
+  for (int i = 0; i < 4; i++) putCell(SCORE_COL + i, 0, buf[i]);
+}
+
+void showTitle() {
+  clearScreen();
+  lcd.setCursor(2, 0);
+  lcd.print("LCD RUNNER");
+  lcd.setCursor(1, 1);
+  lcd.print("Press to start");
+}
+
+// ----- Game logic -----
+void startGame() {
+  for (int c = 0; c < 16; c++) {
+    ground[c] = EMPTY;
+    sky[c] = EMPTY;
+  }
+  airTime = 0;
+  score = 0;
+  gap = 0;
+  tickLength = START_SPEED;
+  clearScreen();
+  state = PLAYING;
+  lastTick = millis();
+  drawGame();
+}
+
+void spawnObstacle() {
+  ground[15] = EMPTY;
+  sky[15] = EMPTY;
+  gap++;
+  if (gap < MIN_GAP) return;
+
+  if (random(100) < 35) {
+    if (score > 30 && random(100) < 30) sky[15] = BIRD;
+    else ground[15] = CACTUS;
+    gap = 0;
+  }
+}
+
+bool hitSomething() {
+  if (airTime == 0 && ground[RUNNER_COL] == CACTUS) return true;
+  if (airTime > 0 && sky[RUNNER_COL] == BIRD) return true;
+  return false;
+}
+
+void gameOver() {
+  state = GAME_OVER;
+  putCell(RUNNER_COL, airTime > 0 ? 0 : 1, 'X');
+
+  tone(BUZZER_PIN, 300, 150);
+  delay(170);
+  tone(BUZZER_PIN, 180, 300);
+  delay(700);
+
+  if (score > best) {
+    best = score;
+    EEPROM.put(0, best);
+  }
+
+  clearScreen();
+  lcd.setCursor(0, 0);
+  lcd.print("GAME OVER ");
+  lcd.print(score);
+  lcd.setCursor(0, 1);
+  lcd.print("Best: ");
+  lcd.print(best);
+}
+
+void gameTick() {
+  // move everything one space left
+  for (int c = 0; c < 15; c++) {
+    ground[c] = ground[c + 1];
+    sky[c] = sky[c + 1];
+  }
+  spawnObstacle();
+
+  if (airTime > 0) airTime--;
+  frame = !frame;
+
+  if (score < 9999) score++;
+  if (score % 50 == 0) tone(BUZZER_PIN, 1320, 60);  // milestone beep
+
+  // speed up as the score rises
+  tickLength = START_SPEED - score / 3;
+  if (tickLength < MIN_SPEED) tickLength = MIN_SPEED;
+
+  if (hitSomething()) {
+    gameOver();
+    return;
+  }
+  drawGame();
+}
+
+// ----- Main -----
+void setup() {
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+  lcd.init();
+  lcd.backlight();
+  lcd.createChar(RUN1, run1Sprite);
+  lcd.createChar(RUN2, run2Sprite);
+  lcd.createChar(JUMP, jumpSprite);
+  lcd.createChar(CACTUS, cactusSprite);
+  lcd.createChar(BIRD, birdSprite);
+
+  EEPROM.get(0, best);
+  if (best > 9999) best = 0;   // fresh memory reads as garbage
+
+  randomSeed(analogRead(A0));
+  showTitle();
+}
+
+void loop() {
+  bool pressed = buttonPressed();
+
+  if (state != PLAYING) {
+    if (pressed) startGame();
+    return;
+  }
+
+  if (pressed && airTime == 0) {
+    airTime = JUMP_TICKS;
+    tone(BUZZER_PIN, 880, 40);
+    if (hitSomething()) {
+      gameOver();
+      return;
+    }
+    drawGame();
+  }
+
+  if (state == PLAYING && millis() - lastTick >= (unsigned long)tickLength) {
+    lastTick = millis();
+    gameTick();
+  }
+}`,
+    },
+  },
 ]
 
-// Display order: Formula SAE, Retrodog, Boeing 737, Timed Phone Jail, RBR, FEM, Motion-Activated Alarm (PIR)
-const projectDisplayOrder = [1, 10, 7, 8, 9, 5, 2, 3, 4]
+// Display order: Formula SAE, Retrodog, Boeing 737, Timed Phone Jail, LCD Runner, RBR, FEM, Motion-Activated Alarm (PIR)
+const projectDisplayOrder = [1, 10, 7, 8, 9, 5, 11, 2, 3, 4]
 export const projects: Project[] = projectDisplayOrder
   .map((id) => projectsList.find((p) => p.id === id))
   .filter((p): p is Project => Boolean(p))

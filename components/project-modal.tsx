@@ -309,6 +309,34 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                     </SyntaxHighlighter>
                   </div>
                 </div>
+
+                {detail.secondCode && (
+                  <div className="overflow-hidden rounded-xl border border-white/10 bg-[#282c34]">
+                    {detail.secondCodeTitle && (
+                      <div className="flex items-center gap-2 border-b border-white/10 px-4 py-2.5">
+                        <span className="h-3 w-3 rounded-full bg-[#ff5f56]" />
+                        <span className="h-3 w-3 rounded-full bg-[#ffbd2e]" />
+                        <span className="h-3 w-3 rounded-full bg-[#27c93f]" />
+                        <span className="ml-2 font-mono text-xs text-muted-foreground">{detail.secondCodeTitle}</span>
+                      </div>
+                    )}
+                    <div className="max-h-[420px] overflow-y-auto">
+                      <SyntaxHighlighter
+                        language={detail.secondCodeLanguage || detail.codeLanguage}
+                        style={oneDark}
+                        customStyle={{
+                          margin: 0,
+                          background: "transparent",
+                          fontSize: "0.8rem",
+                          padding: "1rem",
+                        }}
+                        codeTagProps={{ style: { fontFamily: "var(--font-mono, monospace)" } }}
+                      >
+                        {detail.secondCode}
+                      </SyntaxHighlighter>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}
