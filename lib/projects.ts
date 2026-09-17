@@ -33,6 +33,9 @@ export type ProjectDetail =
       code: string
       codeLanguage: string
       codeTitle?: string
+      secondCode?: string
+      secondCodeLanguage?: string
+      secondCodeTitle?: string
       videos: { src: string; title: string }[]
     }
   | {
@@ -680,6 +683,244 @@ void playNagBuzz(unsigned long weaknessSeconds) {
         "This project recreates the classic Chrome dinosaur game entirely in firmware on an Arduino R4. The gameplay is deliberately simple: anytime you press the button, the character jumps. Time your jumps to clear the cacti (and duck-jump the birds) as the game steadily speeds up, and try to beat your saved high score.\n\nThe hardware is minimal, a single button for input, a 16x2 LCD (the 16-pin character display) for all the graphics, and a buzzer that chirps every time you jump and plays a short game-over tone the moment you hit a cactus and end the run. The runner, obstacles, and jump pose are all drawn as custom 5x8 LCD characters, and the game only redraws the cells that actually change so the animation stays smooth on the low-resolution display. The high score is written to EEPROM so it survives a power cycle.\n\nBecause everything lives in software, this same button-LCD-buzzer setup can become an entirely different game just by swapping the firmware, no rewiring required. For example, the same single-button input could drive a stacking game, where each press drops another rectangle onto a growing tower and the goal is to keep the stack aligned as it climbs higher. The physical build is a reusable one-button arcade platform; the firmware decides what game you're playing.",
       codeLanguage: "cpp",
       codeTitle: "lcd_runner.ino",
+      secondCodeLanguage: "cpp",
+      secondCodeTitle: "lcd_stacker.ino",
+      secondCode: `#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <EEPROM.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// ----- Pins -----
+const int BUTTON_PIN = 7;
+const int BUZZER_PIN = 8;
+
+// ----- Game settings (try changing these!) -----
+const int FIELD = 12;            // play area is columns 0-11
+const int START_WIDTH = 5;       // starting block width
+const int MAX_WIDTH = 5;         // widest a block can grow back to
+const long START_SPEED = 220;    // ms per move at the start
+const long MIN_SPEED = 55;       // fastest the game can get
+const int EEPROM_ADDR = 4;       // different spot than the runner's high score
+
+// ----- Custom characters -----
+const byte BLOCK = 0;   // solid block (the moving one)
+const byte TOWER = 1;   // outlined block (the one you stack onto)
+
+byte blockSprite[8] = {0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111, 0b11111};
+byte towerSprite[8] = {0b11111, 0b10001, 0b10101, 0b10001, 0b10101, 0b10001, 0b11111, 0b00000};
+
+// ----- Game state -----
+enum State { TITLE, PLAYING, GAME_OVER };
+State state = TITLE;
+
+int prevStart, prevWidth;   // the block you're stacking onto (top row)
+int curStart, curWidth;     // the moving block (bottom row)
+int dir = 1;                // 1 = moving right, -1 = moving left
+int score = 0;
+int streak = 0;             // perfect drops in a row
+uint16_t best = 0;
+long tickLength = START_SPEED;
+unsigned long lastTick = 0;
+
+byte shown[2][16];
+bool lastButton = HIGH;
+unsigned long lastChange = 0;
+
+// ----- Screen helpers -----
+void putCell(int col, int row, byte ch) {
+  if (shown[row][col] == ch) return;
+  lcd.setCursor(col, row);
+  lcd.write(ch);
+  shown[row][col] = ch;
+}
+
+void clearScreen() {
+  lcd.clear();
+  for (int r = 0; r < 2; r++)
+    for (int c = 0; c < 16; c++)
+      shown[r][c] = ' ';
+}
+
+// ----- Button: true once per press -----
+bool buttonPressed() {
+  bool now = digitalRead(BUTTON_PIN);
+  if (now != lastButton && millis() - lastChange > 30) {
+    lastChange = millis();
+    lastButton = now;
+    return now == LOW;
+  }
+  return false;
+}
+
+// ----- Drawing -----
+void drawField() {
+  for (int c = 0; c < FIELD; c++) {
+    bool inPrev = (c >= prevStart && c < prevStart + prevWidth);
+    bool inCur  = (c >= curStart && c < curStart + curWidth);
+    putCell(c, 0, inPrev ? TOWER : ' ');
+    putCell(c, 1, inCur ? BLOCK : ' ');
+  }
+}
+
+void drawHud() {
+  putCell(FIELD, 0, '|');
+  putCell(FIELD, 1, '|');
+
+  char buf[4];
+  snprintf(buf, sizeof(buf), "%3d", score);
+  for (int i = 0; i < 3; i++) putCell(FIELD + 1 + i, 0, buf[i]);
+
+  // stars show your perfect-drop streak
+  for (int i = 0; i < 3; i++) putCell(FIELD + 1 + i, 1, i < streak ? '*' : ' ');
+}
+
+void showTitle() {
+  clearScreen();
+  lcd.setCursor(2, 0);
+  lcd.print("LCD STACKER");
+  lcd.setCursor(1, 1);
+  lcd.print("Press to start");
+}
+
+// ----- Game logic -----
+void startGame() {
+  prevWidth = START_WIDTH;
+  prevStart = (FIELD - START_WIDTH) / 2;
+  curWidth = START_WIDTH;
+  curStart = 0;
+  dir = 1;
+  score = 0;
+  streak = 0;
+  tickLength = START_SPEED;
+
+  clearScreen();
+  state = PLAYING;
+  drawField();
+  drawHud();
+  lastTick = millis();
+}
+
+void moveBlock() {
+  int next = curStart + dir;
+  if (next < 0 || next + curWidth > FIELD) {
+    dir = -dir;              // bounce off the wall
+    next = curStart + dir;
+  }
+  curStart = next;
+  drawField();
+}
+
+void gameOver() {
+  state = GAME_OVER;
+  tone(BUZZER_PIN, 300, 150);
+  delay(170);
+  tone(BUZZER_PIN, 180, 300);
+  delay(700);
+
+  if (score > best) {
+    best = score;
+    EEPROM.put(EEPROM_ADDR, best);
+  }
+
+  clearScreen();
+  lcd.setCursor(0, 0);
+  lcd.print("GAME OVER Lv ");
+  lcd.print(score);
+  lcd.setCursor(0, 1);
+  lcd.print("Best: ");
+  lcd.print(best);
+}
+
+void dropBlock() {
+  int left  = max(curStart, prevStart);
+  int right = min(curStart + curWidth, prevStart + prevWidth);
+  int newWidth = right - left;
+  bool perfect = (newWidth == prevWidth);
+
+  // flash the part that gets chopped off
+  if (!perfect) tone(BUZZER_PIN, 220, 120);
+  for (int i = 0; i < 4; i++) {
+    for (int c = curStart; c < curStart + curWidth; c++) {
+      if (c < left || c >= right) putCell(c, 1, (i % 2 == 0) ? ' ' : BLOCK);
+    }
+    delay(90);
+  }
+
+  if (newWidth <= 0) {
+    gameOver();
+    return;
+  }
+
+  if (perfect) {
+    streak++;
+    tone(BUZZER_PIN, 1320, 80);
+    if (streak >= 3) {
+      streak = 0;
+      if (newWidth < MAX_WIDTH) {
+        newWidth++;                                   // reward: block grows back
+        if (left + newWidth > FIELD) left--;
+        delay(100);
+        tone(BUZZER_PIN, 1760, 120);
+      }
+    }
+  } else {
+    streak = 0;
+  }
+
+  if (score < 999) score++;
+
+  // the dropped block becomes the new target
+  prevStart = left;
+  prevWidth = newWidth;
+  curWidth = newWidth;
+
+  // next block starts from alternating sides
+  if (score % 2 == 1) { curStart = 0; dir = 1; }
+  else                { curStart = FIELD - curWidth; dir = -1; }
+
+  tickLength = START_SPEED - score * 8;
+  if (tickLength < MIN_SPEED) tickLength = MIN_SPEED;
+
+  drawField();
+  drawHud();
+  lastTick = millis();
+}
+
+// ----- Main -----
+void setup() {
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+  lcd.init();
+  lcd.backlight();
+  lcd.createChar(BLOCK, blockSprite);
+  lcd.createChar(TOWER, towerSprite);
+
+  EEPROM.get(EEPROM_ADDR, best);
+  if (best > 999) best = 0;   // fresh memory reads as garbage
+
+  showTitle();
+}
+
+void loop() {
+  bool pressed = buttonPressed();
+
+  if (state != PLAYING) {
+    if (pressed) startGame();
+    return;
+  }
+
+  if (pressed) {
+    dropBlock();
+    return;
+  }
+
+  if (millis() - lastTick >= (unsigned long)tickLength) {
+    lastTick = millis();
+    moveBlock();
+  }
+}
+`,
       code: `#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
 #include <EEPROM.h>
