@@ -668,7 +668,7 @@ void playNagBuzz(unsigned long weaknessSeconds) {
   },
   {
     id: 11,
-    title: "LCD Runner: Arduino Dinosaur Game",
+    title: "LCD Runner: Arduino Dinosaur Game / Reconfigurable Button-Game Platform",
     description:
       "A one-button recreation of the Chrome dinosaur game on an Arduino R4, running on a 16x2 LCD with a buzzer for jumps and collisions.",
     image: "/placeholder.svg?height=675&width=1200",
