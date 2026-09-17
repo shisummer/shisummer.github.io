@@ -666,10 +666,254 @@ void playNagBuzz(unsigned long weaknessSeconds) {
       ],
     },
   },
+  {
+    id: 11,
+    title: "LCD Runner: Arduino Dinosaur Game",
+    description:
+      "A one-button recreation of the Chrome dinosaur game on an Arduino R4, running on a 16x2 LCD with a buzzer for jumps and collisions.",
+    image: "/placeholder.svg?height=675&width=1200",
+    category: "electrical",
+    tags: ["Arduino R4", "C++", "I2C LCD", "Buzzer", "Embedded Systems", "Game Firmware"],
+    detail: {
+      layout: "code",
+      fullDescription:
+        "This project recreates the classic Chrome dinosaur game entirely in firmware on an Arduino R4. The gameplay is deliberately simple: anytime you press the button, the character jumps. Time your jumps to clear the cacti (and duck-jump the birds) as the game steadily speeds up, and try to beat your saved high score.\n\nThe hardware is minimal, a single button for input, a 16x2 LCD (the 16-pin character display) for all the graphics, and a buzzer that chirps every time you jump and plays a short game-over tone the moment you hit a cactus and end the run. The runner, obstacles, and jump pose are all drawn as custom 5x8 LCD characters, and the game only redraws the cells that actually change so the animation stays smooth on the low-resolution display. The high score is written to EEPROM so it survives a power cycle.\n\nBecause everything lives in software, this same button-LCD-buzzer setup can become an entirely different game just by swapping the firmware, no rewiring required. For example, the same single-button input could drive a stacking game, where each press drops another rectangle onto a growing tower and the goal is to keep the stack aligned as it climbs higher. The physical build is a reusable one-button arcade platform; the firmware decides what game you're playing.",
+      codeLanguage: "cpp",
+      codeTitle: "lcd_runner.ino",
+      code: `#include <Wire.h>
+#include <LiquidCrystal_I2C.h>
+#include <EEPROM.h>
+
+LiquidCrystal_I2C lcd(0x27, 16, 2);
+
+// ----- Pins -----
+const int BUTTON_PIN = 7;
+const int BUZZER_PIN = 8;
+
+// ----- Game settings (try changing these!) -----
+const int RUNNER_COL = 1;              // column the runner stays in
+const int SCORE_COL = 12;              // score uses top row, columns 12-15
+const int JUMP_TICKS = 4;              // how long a jump lasts
+const int MIN_GAP = 5;                 // minimum space between obstacles
+const long START_SPEED = 250;          // ms per step at the start
+const long MIN_SPEED = 90;             // fastest the game can get
+
+// ----- Custom character slots -----
+const byte RUN1 = 0, RUN2 = 1, JUMP = 2, CACTUS = 3, BIRD = 4;
+const byte EMPTY = ' ';
+
+// ----- Sprites (5 wide x 8 tall, 1 = pixel on) -----
+byte run1Sprite[8]   = {0b01110, 0b01110, 0b00100, 0b01110, 0b10101, 0b00100, 0b01010, 0b10001};
+byte run2Sprite[8]   = {0b01110, 0b01110, 0b00100, 0b01110, 0b10101, 0b00100, 0b01010, 0b01010};
+byte jumpSprite[8]   = {0b01110, 0b01110, 0b10101, 0b01110, 0b00100, 0b01010, 0b10001, 0b00000};
+byte cactusSprite[8] = {0b00100, 0b00101, 0b10101, 0b10101, 0b10111, 0b11100, 0b00100, 0b00100};
+byte birdSprite[8]   = {0b00000, 0b01000, 0b01100, 0b11111, 0b00110, 0b00000, 0b00000, 0b00000};
+
+// ----- Game state -----
+byte ground[16];     // obstacles on the bottom row
+byte sky[16];        // obstacles on the top row
+byte shown[2][16];   // what's currently on the screen (so we only redraw changes)
+
+enum State { TITLE, PLAYING, GAME_OVER };
+State state = TITLE;
+
+int airTime = 0;     // > 0 means the runner is in the air
+int score = 0;
+uint16_t best = 0;
+int gap = 0;         // steps since the last obstacle appeared
+bool frame = false;  // switches between the two running frames
+long tickLength = START_SPEED;
+unsigned long lastTick = 0;
+
+bool lastButton = HIGH;
+unsigned long lastChange = 0;
+
+// ----- Screen helpers -----
+void putCell(int col, int row, byte ch) {
+  if (shown[row][col] == ch) return;   // already showing this, skip
+  lcd.setCursor(col, row);
+  lcd.write(ch);
+  shown[row][col] = ch;
+}
+
+void clearScreen() {
+  lcd.clear();
+  for (int r = 0; r < 2; r++)
+    for (int c = 0; c < 16; c++)
+      shown[r][c] = ' ';
+}
+
+// ----- Button: returns true once per press, ignores contact bounce -----
+bool buttonPressed() {
+  bool now = digitalRead(BUTTON_PIN);
+  if (now != lastButton && millis() - lastChange > 30) {
+    lastChange = millis();
+    lastButton = now;
+    return now == LOW;
+  }
+  return false;
+}
+
+// ----- Drawing -----
+void drawGame() {
+  for (int c = 0; c < 16; c++) {
+    byte bottom = ground[c];
+    byte top = sky[c];
+
+    if (c == RUNNER_COL) {
+      if (airTime > 0) top = JUMP;
+      else bottom = frame ? RUN1 : RUN2;
+    }
+
+    putCell(c, 1, bottom);
+    if (c < SCORE_COL) putCell(c, 0, top);  // birds hide behind the score
+  }
+
+  char buf[5];
+  snprintf(buf, sizeof(buf), "%4d", score);
+  for (int i = 0; i < 4; i++) putCell(SCORE_COL + i, 0, buf[i]);
+}
+
+void showTitle() {
+  clearScreen();
+  lcd.setCursor(2, 0);
+  lcd.print("LCD RUNNER");
+  lcd.setCursor(1, 1);
+  lcd.print("Press to start");
+}
+
+// ----- Game logic -----
+void startGame() {
+  for (int c = 0; c < 16; c++) {
+    ground[c] = EMPTY;
+    sky[c] = EMPTY;
+  }
+  airTime = 0;
+  score = 0;
+  gap = 0;
+  tickLength = START_SPEED;
+  clearScreen();
+  state = PLAYING;
+  lastTick = millis();
+  drawGame();
+}
+
+void spawnObstacle() {
+  ground[15] = EMPTY;
+  sky[15] = EMPTY;
+  gap++;
+  if (gap < MIN_GAP) return;
+
+  if (random(100) < 35) {
+    if (score > 30 && random(100) < 30) sky[15] = BIRD;
+    else ground[15] = CACTUS;
+    gap = 0;
+  }
+}
+
+bool hitSomething() {
+  if (airTime == 0 && ground[RUNNER_COL] == CACTUS) return true;
+  if (airTime > 0 && sky[RUNNER_COL] == BIRD) return true;
+  return false;
+}
+
+void gameOver() {
+  state = GAME_OVER;
+  putCell(RUNNER_COL, airTime > 0 ? 0 : 1, 'X');
+
+  tone(BUZZER_PIN, 300, 150);
+  delay(170);
+  tone(BUZZER_PIN, 180, 300);
+  delay(700);
+
+  if (score > best) {
+    best = score;
+    EEPROM.put(0, best);
+  }
+
+  clearScreen();
+  lcd.setCursor(0, 0);
+  lcd.print("GAME OVER ");
+  lcd.print(score);
+  lcd.setCursor(0, 1);
+  lcd.print("Best: ");
+  lcd.print(best);
+}
+
+void gameTick() {
+  // move everything one space left
+  for (int c = 0; c < 15; c++) {
+    ground[c] = ground[c + 1];
+    sky[c] = sky[c + 1];
+  }
+  spawnObstacle();
+
+  if (airTime > 0) airTime--;
+  frame = !frame;
+
+  if (score < 9999) score++;
+  if (score % 50 == 0) tone(BUZZER_PIN, 1320, 60);  // milestone beep
+
+  // speed up as the score rises
+  tickLength = START_SPEED - score / 3;
+  if (tickLength < MIN_SPEED) tickLength = MIN_SPEED;
+
+  if (hitSomething()) {
+    gameOver();
+    return;
+  }
+  drawGame();
+}
+
+// ----- Main -----
+void setup() {
+  pinMode(BUTTON_PIN, INPUT_PULLUP);
+
+  lcd.init();
+  lcd.backlight();
+  lcd.createChar(RUN1, run1Sprite);
+  lcd.createChar(RUN2, run2Sprite);
+  lcd.createChar(JUMP, jumpSprite);
+  lcd.createChar(CACTUS, cactusSprite);
+  lcd.createChar(BIRD, birdSprite);
+
+  EEPROM.get(0, best);
+  if (best > 9999) best = 0;   // fresh memory reads as garbage
+
+  randomSeed(analogRead(A0));
+  showTitle();
+}
+
+void loop() {
+  bool pressed = buttonPressed();
+
+  if (state != PLAYING) {
+    if (pressed) startGame();
+    return;
+  }
+
+  if (pressed && airTime == 0) {
+    airTime = JUMP_TICKS;
+    tone(BUZZER_PIN, 880, 40);
+    if (hitSomething()) {
+      gameOver();
+      return;
+    }
+    drawGame();
+  }
+
+  if (state == PLAYING && millis() - lastTick >= (unsigned long)tickLength) {
+    lastTick = millis();
+    gameTick();
+  }
+}`,
+      videos: [],
+    },
+  },
 ]
 
-// Display order: Formula SAE, Retrodog, Boeing 737, Timed Phone Jail, RBR, FEM, Motion-Activated Alarm (PIR)
-const projectDisplayOrder = [1, 10, 7, 8, 9, 5, 2, 3, 4]
+// Display order: Formula SAE, Retrodog, Boeing 737, Timed Phone Jail, LCD Runner, RBR, FEM, Motion-Activated Alarm (PIR)
+const projectDisplayOrder = [1, 10, 7, 8, 9, 5, 11, 2, 3, 4]
 export const projects: Project[] = projectDisplayOrder
   .map((id) => projectsList.find((p) => p.id === id))
   .filter((p): p is Project => Boolean(p))
