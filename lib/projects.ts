@@ -1152,7 +1152,6 @@ void loop() {
     gameTick();
   }
 }`,
-      videos: [],
     },
   },
 ]
