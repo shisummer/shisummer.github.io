@@ -674,7 +674,7 @@ void playNagBuzz(unsigned long weaknessSeconds) {
     title: "LCD Runner: Arduino Dinosaur Game / Reconfigurable Button-Game Platform",
     description:
       "A one-button recreation of the Chrome dinosaur game on an Arduino R4, running on a 16x2 LCD with a buzzer for jumps and collisions.",
-    image: "/placeholder.svg?height=675&width=1200",
+    image: "/projects/lcd-runner-cover.jpg",
     category: "electrical",
     tags: ["Arduino R4", "C++", "I2C LCD", "Buzzer", "Embedded Systems", "Game Firmware"],
     detail: {
@@ -684,6 +684,10 @@ void playNagBuzz(unsigned long weaknessSeconds) {
       codeLanguage: "cpp",
       codeTitle: "lcd_runner.ino",
       secondCodeLanguage: "cpp",
+      videos: [
+        { src: "https://streamable.com/e/n5f8md?loop=1", title: "Dinosaur Game" },
+        { src: "https://streamable.com/e/5vc83h?loop=1", title: "Stacker Game" },
+      ],
       secondCodeTitle: "lcd_stacker.ino",
       secondCode: `#include <Wire.h>
 #include <LiquidCrystal_I2C.h>
