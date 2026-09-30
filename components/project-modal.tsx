@@ -341,6 +341,17 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
             </div>
           )}
 
+          {detail?.layout === "split" && detail.heroImage && (
+            <figure className="mb-8">
+              <div className="w-full overflow-hidden rounded-xl border border-white/10 bg-black">
+                <img src={detail.heroImage.src} alt={detail.heroImage.alt} className="h-auto w-full" />
+              </div>
+              {detail.heroImage.caption && (
+                <figcaption className="mt-2 text-xs text-muted-foreground">{detail.heroImage.caption}</figcaption>
+              )}
+            </figure>
+          )}
+
           {detail?.layout === "split" && (
             <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
               {/* Left: text + report link */}
@@ -386,6 +397,19 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
                   </div>
                 ))}
               </div>
+            </div>
+          )}
+
+          {detail?.layout === "split" && detail.images && detail.images.length > 0 && (
+            <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-3">
+              {detail.images.map((img) => (
+                <figure key={img.src}>
+                  <div className="aspect-[4/3] w-full overflow-hidden rounded-xl border border-white/10 bg-black">
+                    <img src={img.src} alt={img.alt} className="h-full w-full object-cover" loading="lazy" />
+                  </div>
+                  {img.caption && <figcaption className="mt-2 text-xs text-muted-foreground">{img.caption}</figcaption>}
+                </figure>
+              ))}
             </div>
           )}
         </div>

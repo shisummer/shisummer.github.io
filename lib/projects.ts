@@ -19,6 +19,8 @@ export type ProjectDetail =
       reportUrl?: string
       reportLabel?: string
       videos: { src: string; title: string }[]
+      heroImage?: { src: string; alt: string; caption?: string }
+      images?: { src: string; alt: string; caption?: string }[]
     }
   | {
       layout: "report"
@@ -106,6 +108,47 @@ const projectsList: Project[] = [
         { src: "https://streamable.com/e/k8g50g?loop=1", title: "Diffused Light Guidance Feature" },
         { src: "https://streamable.com/e/9a82w0?loop=1", title: "Voice-Controlled Object Retrieval & Articulation" },
       ],
+    },
+  },
+  {
+    id: 12,
+    title: "Navigation for the Blind: Haptic Belt",
+    description:
+      "A wearable belt that vibrates in the direction a blind or visually impaired person needs to move, turning navigation into an intuitive sense of touch.",
+    image: "/projects/haptic-belt-overhead.jpg",
+    category: "electrical",
+    categories: ["electrical", "robotics"],
+    tags: ["Wearable Haptics", "Flexible PCBs", "Embedded Systems", "Assistive Technology", "Research"],
+    detail: {
+      layout: "split",
+      sectionTitle: "Haptic Navigation Belt",
+      context:
+        "An ongoing research project at Brown University. I started working on it in August 2026 alongside two PhD students.",
+      fullDescription:
+        "The haptic belt is a wearable navigation aid for blind and visually impaired people. Rather than relying on audio cues that compete with the surrounding environment, the belt communicates direction through touch: vibration motors spaced around the waist activate on the side the wearer needs to turn toward, so the correct heading can be felt instantly. The current second iteration is built from daisy-chained flexible PCB segments, each carrying haptic actuators housed in 3D-printed mounts and linked by ribbon cables. They connect back to a central controller board and battery housed in a custom 3D-printed enclosure. The full assembly sits inside a fabric sleeve with a quick-release buckle so it can be worn comfortably. The demo shows how the belt currently works, and development is continuing on the next iteration.",
+      heroImage: {
+        src: "/projects/haptic-belt-full.jpg",
+        alt: "Second iteration of the haptic belt laid flat on a workbench: flexible orange PCB segments with gray actuator housings on either side of an open enclosure containing the green controller board and battery holder.",
+        caption: "Second iteration: the full belt laid out, with the controller enclosure opened",
+      },
+      images: [
+        {
+          src: "/projects/haptic-belt-overhead.jpg",
+          alt: "Overhead view of the assembled haptic belt on a round table, with actuator segments curving out from the central enclosure.",
+          caption: "Assembled belt",
+        },
+        {
+          src: "/projects/haptic-belt-enclosure.jpg",
+          alt: "Close-up of the 3D-printed controller enclosure connected by a ribbon cable to the flexible PCB actuator segments.",
+          caption: "Controller enclosure and flex PCB segments",
+        },
+        {
+          src: "/projects/haptic-belt-sleeve.jpg",
+          alt: "The haptic belt inside a blue fabric sleeve, closed into a loop with a buckle, with the controller enclosure behind it.",
+          caption: "Wearable fabric sleeve",
+        },
+      ],
+      videos: [{ src: "https://streamable.com/e/x4ulua?loop=1", title: "Haptic Belt Demo" }],
     },
   },
   {
@@ -1157,7 +1200,7 @@ void loop() {
 ]
 
 // Display order: Formula SAE, Retrodog, Boeing 737, Timed Phone Jail, LCD Runner, RBR, FEM, Motion-Activated Alarm (PIR)
-const projectDisplayOrder = [1, 10, 7, 8, 9, 5, 11, 2, 3, 4]
+  const projectDisplayOrder = [1, 10, 12, 7, 8, 9, 5, 11, 2, 3, 4]
 export const projects: Project[] = projectDisplayOrder
   .map((id) => projectsList.find((p) => p.id === id))
   .filter((p): p is Project => Boolean(p))
