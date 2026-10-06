@@ -152,7 +152,7 @@ export default function PortfolioPage() {
         <section id="labs" className="px-6 md:px-12 lg:px-24 py-24">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">Lab Work</h2>
-            <p className="mt-4 max-w-2xl text-muted-foreground leading-relaxed">
+            <p className="mt-4 text-muted-foreground leading-relaxed">
               Hands-on lab work from my engineering courses, including design, simulation, test equipment, and
               written reports.
             </p>
