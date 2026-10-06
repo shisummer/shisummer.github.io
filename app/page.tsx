@@ -5,7 +5,6 @@ import { Linkedin, Github, Mail } from "lucide-react"
 import { Navbar } from "@/components/navbar"
 import { AmbientBackground } from "@/components/ambient-background"
 import { MouseGlow } from "@/components/mouse-glow"
-import { CircuitSides } from "@/components/circuit-sides"
 import { ProjectCard } from "@/components/project-card"
 import { ProjectModal } from "@/components/project-modal"
 import { ImageSlider } from "@/components/image-slider"
@@ -73,7 +72,6 @@ export default function PortfolioPage() {
   return (
     <div className="relative min-h-screen overflow-x-hidden">
       <AmbientBackground />
-      <CircuitSides />
       <MouseGlow />
 
       <Navbar />
