@@ -1282,6 +1282,39 @@ export const labs: Project[] = [
       ],
     },
   },
+  {
+    id: 202,
+    title: "RF Lab: 50 Ω Microstrip Transmission Line",
+    description:
+      "Designed a 50 Ω microstrip line on FR4, simulated it in ANSYS HFSS from 0.5 to 1.5 GHz, then built it and measured S21 and VSWR on a VNA.",
+    image: "/labs/rf-transmission-line-sparams.png",
+    category: "rf",
+    tags: ["ENGN 1560", "ANSYS HFSS", "VNA", "Microstrip", "FR4"],
+    detail: {
+      layout: "report",
+      fullDescription:
+        "Completed for ENGN 1560: Microwave Communications at Brown University. The goal was to design a 50 Ω microstrip transmission line on a 70 × 100 mm FR4 board (1.6 mm substrate, εr = 4.4) at 1 GHz. I calculated the trace width with the closed-form microstrip synthesis equations, which gave W = 3.06 mm, and confirmed it with an online transmission line calculator. I then modeled the board in ANSYS HFSS with lumped ports and a radiation boundary and ran a sweep from 0.5 to 1.5 GHz. In the simulation, S21 stayed near 0 dB across the band and S11 never rose above about −13.5 dB, with a deep −47 dB null near 0.715 GHz. I explained the ripple as interference between small reflections at each end of the line. Next, I built the line by hand from copper tape with SMA connectors and calibrated the VNA over 950 MHz to 1.05 GHz. I measured S21 = −0.46 dB at 1 GHz (about 90% of the power transmitted) and a VSWR of 1.56, which closely matched the simulated VSWR of about 1.5. I attributed the extra ~5% loss to FR4 dielectric loss, the SMA connector transitions, and width variation in the hand-applied copper tape.",
+      image: {
+        src: "/labs/rf-transmission-line-sparams.png",
+        alt: "ANSYS HFSS S-parameter plot from 0.5 to 1.5 GHz showing S21 near 0 dB and S11 dipping to about −47 dB near 0.72 GHz.",
+      },
+      reportUrl: "/labs/engn1560-lab1-transmission-line.pdf",
+      reportLabel: "Open Report in New Tab",
+      embedReport: true,
+      skills: [
+        {
+          title: "ANSYS HFSS",
+          description:
+            "Modeled a microstrip line with lumped ports and a radiation boundary, then ran adaptive meshing and a 0.5–1.5 GHz frequency sweep to analyze its S-parameters.",
+        },
+        {
+          title: "VNA Calibration + Analysis",
+          description:
+            "Calibrated a vector network analyzer and measured S21, a Smith chart, and VSWR at 1 GHz, then compared the results against simulation.",
+        },
+      ],
+    },
+  },
 ]
 
 export const labCategories = [
