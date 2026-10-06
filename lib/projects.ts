@@ -28,6 +28,9 @@ export type ProjectDetail =
       image: { src: string; alt: string }
       reportUrl: string
       reportLabel?: string
+      /** Render the report inline as an embedded PDF viewer. */
+      embedReport?: boolean
+      skills?: { title: string; description?: string }[]
     }
   | {
       layout: "code"
@@ -1243,6 +1246,47 @@ export const research: Project[] = [
         "Incarcerated populations deal with much higher rates of chronic infectious diseases like HIV, but the data tracking inside correctional facilities is scattered, largely qualitative, and hard for public health officials to actually use. Researchers don't have a unified, secure place to screen the medical literature, pull together inmates' firsthand accounts, and see the socioeconomic and systemic barriers to care laid out clearly.\n\nMy work focused on aggregating, screening, and analyzing epidemiological data on HIV prevalence, how it spreads, and the barriers to healthcare access within these facilities. From there, I turned the qualitative findings into clearer, actionable insights and built a secure web platform to visualize everything for public health researchers. This research is currently being prepared for publication, and the systematic review has been officially registered in PROSPERO, the international database maintained by the University of York that publicly logs systematic review protocols before results are published to keep the process transparent and prevent duplicate work.",
     },
   },
+]
+
+export const labs: Project[] = [
+  {
+    id: 201,
+    title: "RF Lab: Microstrip Matching & Stepped-Impedance Low-Pass Filter",
+    description:
+      "Designed impedance-matching networks and a 6th-order microstrip low-pass filter in ANSYS HFSS, then hand-built the filter on FR4 and characterized it on a VNA.",
+    image: "/labs/rf-lowpass-filter.png",
+    category: "rf",
+    tags: ["ENGN 1560", "ANSYS HFSS", "VNA", "Microstrip", "FR4"],
+    detail: {
+      layout: "report",
+      fullDescription:
+        "Completed for ENGN 1560: Microwave Communications at Brown University. Starting from a 50 Ω microstrip line on FR4, I used ANSYS HFSS to work through three core microwave design techniques. First, I matched a complex 80 − j60 Ω load at 1 GHz with a single open-circuit stub. I designed it in SimSmith and then tuned it in HFSS to account for junction and open-end capacitance, which brought the VSWR down from about 3.2 to 1.35 and cut reflected power by more than 10x. Next, I matched a 40 Ω load to a 75 Ω line at 2 GHz with a 54.77 Ω quarter-wave transformer, lowering the VSWR to 1.17 (about 0.4% of power reflected). Finally, I designed a sixth-order maximally flat stepped-impedance low-pass filter based on Pozar Example 8.6. I calculated every trace width and length from microstrip design equations, and the simulated filter showed a −3 dB cutoff near 2.2 GHz with 26 dB of attenuation at 4 GHz. I then built the filter by hand from copper foil tape with SMA connectors and measured S21 on a VNA from 100 kHz to 5 GHz. The measured response didn't match the simulation, so I did an error analysis and traced the failure to a likely loss of continuity in the 0.41 mm foil inductor traces and unsoldered contact joints. I also explained how cutting tolerances, adhesive dielectric, and FR4 variation would shift the cutoff rather than remove the passband.",
+      image: {
+        src: "/labs/rf-lowpass-filter.png",
+        alt: "Hand-built stepped-impedance microstrip low-pass filter made of copper foil tape on an FR4 board with SMA connectors on each end.",
+      },
+      reportUrl: "/labs/engn1560-lab2-lowpass-filter.pdf",
+      reportLabel: "Open Report in New Tab",
+      embedReport: true,
+      skills: [
+        {
+          title: "ANSYS HFSS",
+          description:
+            "3D EM modeling and simulation of microstrip stubs, quarter-wave transformers, and a stepped-impedance filter, including S-parameter and VSWR analysis.",
+        },
+        {
+          title: "VNA Calibration + Analysis",
+          description:
+            "Calibrated a vector network analyzer and measured S21 from 100 kHz to 5 GHz, then compared the measurements against simulation in a full error analysis.",
+        },
+      ],
+    },
+  },
+]
+
+export const labCategories = [
+  { id: "all", label: "All" },
+  { id: "rf", label: "RF & Microwave" },
 ]
 
 export const researchCategories = [

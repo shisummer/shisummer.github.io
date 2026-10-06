@@ -10,7 +10,15 @@ import { ProjectCard } from "@/components/project-card"
 import { ProjectModal } from "@/components/project-modal"
 import { ImageSlider } from "@/components/image-slider"
 import { ContactForm } from "@/components/contact-form"
-import { projects, categories, research, researchCategories, type Project } from "@/lib/projects"
+import {
+  projects,
+  categories,
+  research,
+  researchCategories,
+  labs,
+  labCategories,
+  type Project,
+} from "@/lib/projects"
 
 const upcomingCourses = [
   "ENGN 0510: Electricity and Magnetism",
@@ -42,7 +50,11 @@ const completedCourses = [
 export default function PortfolioPage() {
   const [activeCategory, setActiveCategory] = useState("all")
   const [activeResearchCategory, setActiveResearchCategory] = useState("all")
+  const [activeLabCategory, setActiveLabCategory] = useState("all")
   const [selectedProject, setSelectedProject] = useState<Project | null>(null)
+
+  const filteredLabs =
+    activeLabCategory === "all" ? labs : labs.filter((lab) => lab.category === activeLabCategory)
 
   const filteredProjects =
     activeCategory === "all"
@@ -133,6 +145,39 @@ export default function PortfolioPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
               {filteredProjects.map((project, index) => (
                 <ProjectCard key={project.id} project={project} index={index} onOpen={setSelectedProject} />
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* LAB WORK SECTION */}
+        <section id="labs" className="px-6 md:px-12 lg:px-24 py-24">
+          <div className="max-w-7xl mx-auto">
+            <h2 className="text-4xl md:text-5xl font-bold text-foreground tracking-tight">Lab Work</h2>
+            <p className="mt-4 max-w-2xl text-muted-foreground leading-relaxed">
+              Hands-on lab work from my engineering courses, including design, simulation, test equipment, and
+              written reports.
+            </p>
+
+            <div className="flex flex-wrap items-center gap-3 mt-8">
+              {labCategories.map((cat) => (
+                <button
+                  key={cat.id}
+                  onClick={() => setActiveLabCategory(cat.id)}
+                  className={`px-5 py-2.5 text-sm font-medium rounded-full transition-all duration-300 ${
+                    activeLabCategory === cat.id
+                      ? "glass-heavy border-white/20 text-foreground"
+                      : "glass border-white/5 text-muted-foreground hover:border-white/15 hover:text-foreground"
+                  }`}
+                >
+                  {cat.label}
+                </button>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-12">
+              {filteredLabs.map((lab, index) => (
+                <ProjectCard key={lab.id} project={lab} index={index} onOpen={setSelectedProject} />
               ))}
             </div>
           </div>

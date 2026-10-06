@@ -221,6 +221,33 @@ export function ProjectModal({ project, onClose }: ProjectModalProps) {
               <p className="text-sm md:text-base leading-relaxed" style={{ color: "#e5e7eb" }}>
                 {detail.fullDescription}
               </p>
+              {detail.skills && detail.skills.length > 0 && (
+                <div>
+                  <h3 className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted-foreground">Skills</h3>
+                  <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+                    {detail.skills.map((skill) => (
+                      <div key={skill.title} className="rounded-xl border border-white/10 bg-secondary/30 p-4">
+                        <h4 className="text-sm md:text-base font-semibold text-foreground">{skill.title}</h4>
+                        {skill.description && (
+                          <p className="mt-1.5 text-xs md:text-sm leading-relaxed text-muted-foreground">
+                            {skill.description}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {detail.embedReport && (
+                <div className="h-[70vh] w-full overflow-hidden rounded-xl border border-white/10 bg-white">
+                  <iframe
+                    src={`${detail.reportUrl}#view=FitH`}
+                    title={`${project.title} lab report`}
+                    className="h-full w-full"
+                    loading="lazy"
+                  />
+                </div>
+              )}
               <div className="flex flex-wrap items-center gap-4 pt-2">
                 <a
                   href={detail.reportUrl}
